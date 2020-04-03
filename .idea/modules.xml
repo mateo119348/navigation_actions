@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/PruebaConceptoNavigationManager.iml" filepath="$PROJECT_DIR$/PruebaConceptoNavigationManager.iml" group="PruebaConceptoNavigationManager" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="PruebaConceptoNavigationManager/app" />
+      <module fileurl="file://$PROJECT_DIR$/navigation/navigation.iml" filepath="$PROJECT_DIR$/navigation/navigation.iml" group="PruebaConceptoNavigationManager/navigation" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/navigation_actions.iml" filepath="$PROJECT_DIR$/.idea/navigation_actions.iml" />
+    </modules>
+  </component>
+</project>
