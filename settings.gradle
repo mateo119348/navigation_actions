@@ -1,0 +1,3 @@
+rootProject.name='PruebaConceptoNavigationManager'
+include ':app'
+include ':navigation'

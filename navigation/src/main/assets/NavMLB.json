@@ -1,0 +1,34 @@
+{
+
+  "screens": [
+    {
+      "navigation_id": "CALCULATOR",
+      "attr": [
+        {"value": "AMOUNT"}
+      ],
+      "sequence": "0"
+    },
+    {
+      "navigation_id": "DESCRIPTION",
+      "attr": [
+        {"value": "DESCRIPTION"}
+      ],
+      "sequence": ""
+    },
+    {
+      "navigation_id": "CART",
+
+      "attr": [
+        {"value": "CART"}
+      ],
+      "sequence": ""
+    },
+    {
+      "navigation_id": "READ_CARD",
+      "attr": [
+        {"value": ""}
+      ],
+      "sequence": "0"
+    }
+  ]
+}
