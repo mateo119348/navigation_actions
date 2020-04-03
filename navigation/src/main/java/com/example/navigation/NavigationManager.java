@@ -1,5 +1,6 @@
 package com.example.navigation;
 
+import com.example.navigation.action.Attr;
 import com.example.navigation.stepsEngine.Flow;
 import com.example.navigation.stepsEngine.Step;
 import com.example.navigation.stepsEngine.StepIdentifier;
@@ -19,9 +20,25 @@ public class NavigationManager {
     protected Navigable currentScreen;
 
 
+    public void upadatePaymentFlowState (List<Attr> attributes, PaymentFlowState paymentFlowState){
+
+    }
+
+
+    public String checkPaymentFlowState (List<Attr> attributes, PaymentFlowState paymentFlowState){
+
+        upadatePaymentFlowState(attributes, paymentFlowState);
+
+
+        if (!currentStep.getRule().evaluate(paymentFlowState)){
+
+        }
+
+        return "";
+    }
 
     public String getNextAction(PaymentFlowState paymentFlowState, NavigationActionManager navigationActionManager){
-        
+
         String retval = "";
 
         //Primera vez, primer step
@@ -36,12 +53,12 @@ public class NavigationManager {
 
             //Si la siguiente accion se ejecuta en la pantalla actual
             if (currentStepScreens.get(1).getNavigationId().equals(currentScreen.getNavigationId())) {
-                retval = navigationActionManager.resolveAction(currentStep.getRule());
+                retval = navigationActionManager.resolveAction(currentStep.getRule(), currentScreen.getAttrinutesValues());
             } else {
                 retval = currentStepScreens.get(0).getNavigationId();
             }
         } else {
-            retval = navigationActionManager.resolveAction(currentStep.getRule());
+            retval = navigationActionManager.resolveAction(currentStep.getRule(), currentScreen.getAttrinutesValues());
         }
 
         return retval;
