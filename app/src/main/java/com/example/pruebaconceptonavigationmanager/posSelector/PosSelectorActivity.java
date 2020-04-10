@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.example.navigation.stepsEngine.flow.rules.base.Rule;
+import com.example.navigation.stepsEngine.payment.PointPayment;
 import com.example.pruebaconceptonavigationmanager.R;
 import com.example.pruebaconceptonavigationmanager.actions.Action;
 import com.example.pruebaconceptonavigationmanager.actions.Field;
@@ -42,6 +43,11 @@ public class PosSelectorActivity extends AppCompatActivity implements Action {
 
     @Override
     public void setField(String idField, Object value) {
+
+    }
+
+    @Override
+    public void backStepState(List<Field> fields, PointPayment paymentFlowState) {
 
     }
 }

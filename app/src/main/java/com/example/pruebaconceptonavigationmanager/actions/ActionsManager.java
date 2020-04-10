@@ -76,10 +76,14 @@ public class ActionsManager {
         return currentActionIndex == getCurrentActions().size() - 1;
     }
 
-    //TODO: Terminar de revisar cada caso
+    /**
+     * Se evalua si la action cumple o no las reglas para pasar al siguiente action o step
+     * @param mCurrentAction
+     */
     public void validate (Action mCurrentAction) {
         Rule currentRule = getCurrentStep().getRule();
 
+        //Actualuizo el paymentFlowState con los fields que cargue en la action a evaluar
         upadatePaymentFlowState(mCurrentAction.getFields(), paymentFlowState);
 
         //Si la regla del Step es del tipo AND (debo hacer que no cumpla al menos una sub rule para salir del step)
@@ -94,7 +98,7 @@ public class ActionsManager {
                 }
             }
         }
-        //Si la regla del Step es del tipo OR (debo hacer que no cumpla ninguna subRule para salir del step)
+        //Si la regla del Step es del tipo OR (debo hacer que no cumpla ninguna sub rule para salir del step)
         //Ante la primer subRule que este cumpliendo, tengo que resolver el error.
         //Al final de cada action que tenga algun field involucrado en el rule del step, debo evaluar
         else if (currentRule instanceof OrRule) {

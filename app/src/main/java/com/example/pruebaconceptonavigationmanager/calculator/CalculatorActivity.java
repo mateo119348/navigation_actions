@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.navigation.stepsEngine.payment.PointPayment;
 import com.example.pruebaconceptonavigationmanager.actions.Action;
 import com.example.pruebaconceptonavigationmanager.actions.Field;
 import com.example.navigation.stepsEngine.flow.rules.base.Rule;
@@ -45,6 +46,11 @@ public class CalculatorActivity extends AppCompatActivity implements Action {
 
     @Override
     public void setField(String idField, Object value) {
+
+    }
+
+    @Override
+    public void backStepState(List<Field> fields, PointPayment paymentFlowState) {
 
     }
 }

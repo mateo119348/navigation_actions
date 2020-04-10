@@ -3,6 +3,7 @@ package com.example.pruebaconceptonavigationmanager.actions;
 import android.content.Context;
 
 import com.example.navigation.stepsEngine.flow.rules.base.Rule;
+import com.example.navigation.stepsEngine.payment.PointPayment;
 import com.example.pruebaconceptonavigationmanager.calculator.CalculatorActivity;
 import com.example.pruebaconceptonavigationmanager.chooser.ChooserActivity;
 import com.example.pruebaconceptonavigationmanager.description.DescriptionActivity;
@@ -23,4 +24,5 @@ public interface Action {
     List<Field> getFields();
     void resolveUnfullfiledRule(Rule unfulfilledRule);
     void setField (String idField, Object value);
+    void backStepState(List<Field> fields, PointPayment paymentFlowState);
 }

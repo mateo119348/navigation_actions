@@ -1,14 +1,14 @@
 [
 
-  //MLB: Camino feliz, como el que tenemos hoy, todos los campos (obligatorios y no)
-  //son resueltos por la misma accion CALCULATOR (pantalla de calculadora, con accseso a carrito y descripcion)
+  //MLB: Camino feliz, como el que tenemos hoy, todos los fields (obligatorios y no)
+  //son resueltos por la misma action CALCULATOR (pantalla de calculadora, con accseso a carrito y descripcion)
 
-  // MLA: Sigue siendo una sola accion, que al terminar evalua una condicion mas que antes (DESCRIPTION)
-  // Si la regla que no cumple es la de DESCRIPTION, la resolucon sobre la regla no cumplida se hara en
+  // MLA: Sigue siendo una sola action, que al terminar evalua una condicion mas que antes (DESCRIPTION)
+  // Si la rule que no cumple es la de DESCRIPTION, la resolucon sobre la rule no cumplida se hara en
   // en la accion CALCULATOR (pantalla calculadora en el caso actual)
 
-  //MLM: Si al finalizar el action, se introdujeron alguno de los 2 datos requeridos (AMOUNT o CART)
-  //se rompe la rule del step y avanza al siguiente, si no se completó ninguno de los 2 datos
+  //MLM: Si al finalizar el action, se introdujeron alguno de los 2 fields requeridos (AMOUNT o CART)
+  //se rompe la rule del step y avanza al siguiente, si no se completó ninguno de los 2 fields
   // al evaluarse la rule del step, la primera en evaluar va a lanzar el error, en este caso por AMOUNT igual a 0
   //(podriamos evaluar todas para que muestre cada una de las reglas no cumplidas?)
   /*-------------------------------------------------------------------------------*/
@@ -29,19 +29,19 @@
     "fields": ["DEVICE", "IS_DEVICE_CONNECTED", "CARD_TAG", "SERVICE_CODE"]
   },
 
-//MLB: El step AMOUNT va a tener 2 acciones: CALCULATOR y DESCRIPTION.
-  //Cuando CALCULATOR termina, se evaluan sus campos (AMOUNT,CART) contra la regla del step
-  //para dichos campos, si no se cumple, no se avanza al proximo action, sino que ejecuta segun el error.
-  //Si cumple, el step tambien se cumple, ya que el unico campo requerido es AMOUNT, pero aun queda la accion DESCRIPTION
+//MLB: El step AMOUNT va a tener 2 actions: CALCULATOR y DESCRIPTION.
+  //Cuando CALCULATOR termina, se evaluan sus fields (AMOUNT,CART) contra la rule del step
+  //para dichos fields, si no se cumple, no se avanza al proximo action, sino que ejecuta segun el error.
+  //Si cumple, el step tambien se cumple, ya que el unico field requerido es AMOUNT, pero aun queda la action DESCRIPTION
   //por ejecutar, por lo tanto no se avanza de step hasta no concluir todos las actions de este
 
-  //MLA: Cuando se termine de ejecutar la accion CALCULATOR, solo se evaluaran las rules del step que cumplan
-  //con el campo AMOUNT, si no se cumplen, se ejecuta resolucion de regla no cumplida, si se cumple
+  //MLA: Cuando se termine de ejecutar la action CALCULATOR, solo se evaluaran las rules del step que cumplan
+  //con el field AMOUNT, si no se cumplen, se ejecuta resolucion de rule no cumplida, si se cumple
   //se pasa a la siguiente accion DESCRIPTION, y por ser la ultima de las actions del step, se puede evaluar
-  //toda la rules del step completo (incluyendo la rule de DESCRIPTION)
+  //toda la rule del step completo (incluyendo la rule de DESCRIPTION)
 
   //MLM: Como la rule del step es del tipo AND, esta se evalua solamente en el ultimo action
-  //que en este caso es DESCRIPTION, y si alguna falla, mostraria en esta ultima las reglas no cumplidas
+  //que en este caso es DESCRIPTION, y si alguna falla, mostraria en esta ultima las sub rules no cumplidas
   //por lo cual no aplica este esquema de acciones con el flow MLM (o habria que sacar a DESCRIPTION en otro step)
 /*-------------------------------------------------------------------------------*/
 
@@ -67,12 +67,12 @@
     "fields": ["DEVICE", "IS_DEVICE_CONNECTED", "CARD_TAG", "SERVICE_CODE"]
   },
 
-  //MLB: El step AMOUNT va a tener 3 acciones: CART, CALCULATOR y DESCRIPTION:
-  //Primero se ejecuta CART, y como no tiene ijnerencia en ninguna de las reglas del step,
+  //MLB: El step AMOUNT va a tener 3 actions: CART, CALCULATOR y DESCRIPTION:
+  //Primero se ejecuta CART, y como no tiene ijnerencia en ninguna de las sub rules del step,
   //avanza al siguiente action y luego el camino continua igual que el caso anterior para MLB
 
-  //MLA: Primero se ejecuta CART, y como no tiene ijnerencia en ninguna de las reglas del step,
-  //  //avanza al siguiente action CALCULATOR, al finalizar, verifica las rules del step para AMOUNT solamente
+  //MLA: Primero se ejecuta CART, y como no tiene ijnerencia en ninguna de las sub rules del step,
+  //avanza al siguiente action CALCULATOR, al finalizar, verifica las rules del step para AMOUNT solamente
   //, si cumple, avanza a la action DESCRIPTION, y al finalizar, por ser el ultimo action del step,
   //evalua la rule del step completa (incluyendo la rule de DESCRIPTION)
   //MLM: idem esquema de actions anterior
@@ -106,8 +106,8 @@
 
 
 
-  //MLB: Primero se ejecuta CART, y como no tiene ijnerencia en ninguna de las reglas del step,
-  //  //avanza al siguiente action CALCULATOR, al finalizar, evalua las los campos de la action contra la rule
+  //MLB: Primero se ejecuta CART, y como no tiene ijnerencia en ninguna de las sub rules del step,
+  //avanza al siguiente action CALCULATOR, al finalizar, evalua los fields de la action contra la rule
   // del step y con eso ya cumple o no la rule
 
   //MLM: El step AMOUNT va a tener 2 acciones: CART y CALCULATOR:
