@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".paymentDescription.PaymentDescriptionActivity"></activity>
+        <activity android:name=".posSelector.PosSelectorActivity"></activity>
+        <activity android:name=".chooser.ChooserActivity" />
+        <activity android:name=".description.DescriptionActivity" />
         <activity android:name=".installments.InstallmentsActivity" />
         <activity android:name=".calculator.CalculatorActivity">
             <intent-filter>

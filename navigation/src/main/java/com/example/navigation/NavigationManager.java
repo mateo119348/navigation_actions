@@ -1,9 +1,12 @@
 package com.example.navigation;
 
-import com.example.navigation.action.Attr;
-import com.example.navigation.stepsEngine.Flow;
-import com.example.navigation.stepsEngine.Step;
-import com.example.navigation.stepsEngine.StepIdentifier;
+import com.example.navigation.action.ActionsManager;
+import com.example.navigation.action.Field;
+import com.example.navigation.action.Action;
+import com.example.navigation.stepsEngine.flow.Flow;
+import com.example.navigation.stepsEngine.flow.Step;
+import com.example.navigation.stepsEngine.flow.rules.base.Rule;
+import com.example.navigation.stepsEngine.payment.PointPayment;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,53 +16,40 @@ public class NavigationManager {
 
     protected Flow flow;
     protected List<Navigable> screens;
-    PaymentFlowState paymentFlowState;
-    PaymentFlowState previousPaymentFlowState;
+    PointPayment paymentFlowState;
+    PointPayment previousPaymentFlowState;
     protected Step currentStep;
     protected Map<Integer, Navigable> currentStepScreens;
     protected Navigable currentScreen;
 
 
-    public void upadatePaymentFlowState (List<Attr> attributes, PaymentFlowState paymentFlowState){
-
-    }
 
 
-    public String checkPaymentFlowState (List<Attr> attributes, PaymentFlowState paymentFlowState){
 
+    //Evaluo si cumplo la regla, con los atributos y valores de la pantalla actual
+    public Action evaluate(List<Field> attributes, PointPayment paymentFlowState, UnfullfiledRuleListener navigationActionResolve){
+
+        Action action = null;
+
+        //Actualizo el paymentFlowState con los valores obtenidos de la pantalla
         upadatePaymentFlowState(attributes, paymentFlowState);
 
-
-        if (!currentStep.getRule().evaluate(paymentFlowState)){
+        //Evaluo si sumplo las reglas de la pantalla actual
+        List<Rule> unfulfilledRules = ActionsManager.evaluateCurrentRule(attributes, currentStep.getRule(), paymentFlowState);
+        if (unfulfilledRules != null){
+            action = navigationActionResolve.resolveAction(unfulfilledRules);
+        } else {
 
         }
 
-        return "";
+        return action;
     }
 
-    public String getNextAction(PaymentFlowState paymentFlowState, NavigationActionManager navigationActionManager){
+    public Action getNextAction(PointPayment paymentFlowState){
 
-        String retval = "";
+        Action retval = null;
 
-        //Primera vez, primer step
-        if (currentStep == null){
-            setCurrentStepScreens(paymentFlowState);
-            //pantalla con secuencia 0
-            retval = currentStepScreens.get(0).getNavigationId();
 
-        //Evaluo si cumplo el paso actual
-        } else if (currentStep.getRule().evaluate(paymentFlowState)) {
-            setCurrentStepScreens(paymentFlowState);
-
-            //Si la siguiente accion se ejecuta en la pantalla actual
-            if (currentStepScreens.get(1).getNavigationId().equals(currentScreen.getNavigationId())) {
-                retval = navigationActionManager.resolveAction(currentStep.getRule(), currentScreen.getAttrinutesValues());
-            } else {
-                retval = currentStepScreens.get(0).getNavigationId();
-            }
-        } else {
-            retval = navigationActionManager.resolveAction(currentStep.getRule(), currentScreen.getAttrinutesValues());
-        }
 
         return retval;
     }
@@ -68,8 +58,9 @@ public class NavigationManager {
 
 
 
-    public String getNextScreen(){
-        String retval = "";
+
+    public Action getNextAction(){
+        Action retval = null;
 
         int currentSequence = currentScreen.getSequence() + 1;
 
@@ -86,7 +77,7 @@ public class NavigationManager {
         return retval;
     }
 
-    private void setCurrentStepScreens(PaymentFlowState paymentFlowState) {
+    private void setCurrentStepScreens(PointPayment paymentFlowState) {
         currentStep = flow.getNext(paymentFlowState);
         currentStepScreens = new HashMap<>();
 
