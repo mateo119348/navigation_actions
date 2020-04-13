@@ -11,4 +11,9 @@ public class AmountFieldManager extends FieldManager {
         return pointPayment.getAmount();
     }
 
+    @Override
+    public String getFieldName() {
+        return null;
+    }
+
 }

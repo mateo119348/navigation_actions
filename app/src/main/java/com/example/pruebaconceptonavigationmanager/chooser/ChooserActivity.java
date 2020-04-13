@@ -2,12 +2,11 @@ package com.example.pruebaconceptonavigationmanager.chooser;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import com.example.navigation.stepsEngine.payment.PointPayment;
-import com.example.pruebaconceptonavigationmanager.actions.Action;
-import com.example.pruebaconceptonavigationmanager.actions.Field;
+import com.example.navigation.action.Action;
+import com.example.navigation.action.Field;
 import com.example.navigation.stepsEngine.flow.rules.base.Rule;
 import com.example.pruebaconceptonavigationmanager.R;
 
@@ -22,7 +21,7 @@ public class ChooserActivity extends AppCompatActivity implements Action {
     }
 
     @Override
-    public void execute(Context context, Object... params) {
+    public void execute(Object... params) {
 
     }
 

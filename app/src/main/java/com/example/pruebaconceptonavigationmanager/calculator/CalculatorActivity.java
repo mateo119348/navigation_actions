@@ -2,13 +2,12 @@ package com.example.pruebaconceptonavigationmanager.calculator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.navigation.stepsEngine.payment.PointPayment;
-import com.example.pruebaconceptonavigationmanager.actions.Action;
-import com.example.pruebaconceptonavigationmanager.actions.Field;
+import com.example.navigation.action.Action;
+import com.example.navigation.action.Field;
 import com.example.navigation.stepsEngine.flow.rules.base.Rule;
 import com.example.pruebaconceptonavigationmanager.R;
 
@@ -23,10 +22,8 @@ public class CalculatorActivity extends AppCompatActivity implements Action {
     }
 
     @Override
-    public void execute(Context context, Object... params) {
-        Intent intent = new Intent(context, CalculatorActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        context.startActivity(intent);
+    public void execute(Object... params) {
+
     }
 
     @Override

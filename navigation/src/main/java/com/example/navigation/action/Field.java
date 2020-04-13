@@ -1,4 +1,4 @@
-package com.example.pruebaconceptonavigationmanager.actions;
+package com.example.navigation.action;
 
 public abstract class Field {
 

@@ -19,7 +19,7 @@ import com.example.navigation.stepsEngine.payment.PointPayment;
         @JsonSubTypes.Type(value = NullRule.class, name = RuleIdentifiers.NULL),
         @JsonSubTypes.Type(value = StringEqualsRule.class, name = RuleIdentifiers.STRING_EQUALS),
         @JsonSubTypes.Type(value = IsGreaterThanRule.class, name = RuleIdentifiers.IS_GREATER_THAN),
-        @JsonSubTypes.Type(value = IsLowerEqualThanRule.class, name = RuleIdentifiers.IS_LOWER_EQUAL_THAN)
+        @JsonSubTypes.Type(value = IsLowerEqualThanRule.class, name = RuleIdentifiers.IS_LOWER_EQUAL_THAN),
         @JsonSubTypes.Type(value = StringContainsRule.class, name = RuleIdentifiers.STRING_CONTAINS),
         @JsonSubTypes.Type(value = StringEmptyRule.class, name = RuleIdentifiers.STRING_EMPTY),
         @JsonSubTypes.Type(value = StringIsContainedRule.class, name = RuleIdentifiers.STRING_IS_CONTAINED),

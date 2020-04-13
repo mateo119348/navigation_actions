@@ -2,14 +2,13 @@ package com.example.pruebaconceptonavigationmanager.posSelector;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import com.example.navigation.stepsEngine.flow.rules.base.Rule;
 import com.example.navigation.stepsEngine.payment.PointPayment;
 import com.example.pruebaconceptonavigationmanager.R;
-import com.example.pruebaconceptonavigationmanager.actions.Action;
-import com.example.pruebaconceptonavigationmanager.actions.Field;
+import com.example.navigation.action.Action;
+import com.example.navigation.action.Field;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class PosSelectorActivity extends AppCompatActivity implements Action {
     }
 
     @Override
-    public void execute(Context context, Object... params) {
+    public void execute(Object... params) {
 
     }
 

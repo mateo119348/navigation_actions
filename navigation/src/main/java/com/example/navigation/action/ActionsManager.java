@@ -1,4 +1,4 @@
-package com.example.pruebaconceptonavigationmanager.actions;
+package com.example.navigation.action;
 
 import android.content.Context;
 import android.util.ArrayMap;
@@ -27,7 +27,8 @@ public class ActionsManager {
     private Step currentStep;
     private Flow flow;
     private int currentActionIndex;
-    private Context context;
+    private ActionMapper actionMapper;
+    //private Context context;
 
     public ActionsManager getInstance(){
         if (instance == null) {
@@ -80,11 +81,21 @@ public class ActionsManager {
      * Se evalua si la action cumple o no las reglas para pasar al siguiente action o step
      * @param mCurrentAction
      */
-    public void validate (Action mCurrentAction) {
+    public void validateAndContinue (Action mCurrentAction) {
         Rule currentRule = getCurrentStep().getRule();
 
         //Actualuizo el paymentFlowState con los fields que cargue en la action a evaluar
         upadatePaymentFlowState(mCurrentAction.getFields(), paymentFlowState);
+
+        if (validate(mCurrentAction, currentRule)) {
+            executeNext(mCurrentAction);
+        };
+
+
+    }
+
+    public boolean validate(Action mCurrentAction,  Rule currentRule) {
+        boolean retval = true;
 
         //Si la regla del Step es del tipo AND (debo hacer que no cumpla al menos una sub rule para salir del step)
         //Estas se evaluan en el ultimo action. Ante la primera que cumple, muestro el error
@@ -93,7 +104,7 @@ public class ActionsManager {
                 for (Rule subRule : ((AndRule)currentRule).getSubRules()) {
                     if (subRule.evaluate(paymentFlowState)) {
                         mCurrentAction.resolveUnfullfiledRule(subRule);
-                        return;
+                        return false;
                     }
                 }
             }
@@ -107,19 +118,18 @@ public class ActionsManager {
             for (Rule subRule : currentRules) {
                 if (subRule.evaluate(paymentFlowState)) {
                     mCurrentAction.resolveUnfullfiledRule(subRule);
-                    return;
+                    return false;
                 }
             }
         } else if (currentRule instanceof NotRule){
             for (Field attribute :mCurrentAction.getFields()) {
                 if (currentRule.getFieldName().equals(attribute.getName()) && !currentRule.evaluate(paymentFlowState)){
                     mCurrentAction.resolveUnfullfiledRule(((NotRule) currentRule).getSubRules().get(0));
-                    return;
+                    return false;
                 }
             }
         }
-
-        executeNext(mCurrentAction);
+        return true;
     }
 
     /**
@@ -190,7 +200,7 @@ public class ActionsManager {
         if (!isLastAction()){
             currentActionIndex++;
             currentAction = null;
-            getCurrentAction().execute(context, paymentFlowState);
+            actionMapper.executeAction(mCurrentAction, paymentFlowState);
         }  else if (!getCurrentStep().mustExecute(paymentFlowState)) {
             executeNextStep(mCurrentAction);
         } else {
@@ -213,17 +223,17 @@ public class ActionsManager {
     }
 
     private void executeAction(Action action) {
-        action.execute(context, getCurrentStep().getRequiredFields(), getCurrentStep().getOptionalFields());
+        actionMapper.executeAction(action, getCurrentStep().getRequiredFields(), getCurrentStep().getOptionalFields());
     }
 
     /**
      * Se intstancia el flow correspondiente al tipo de operacion
      * @param operationType
      */
-    public void startFlow (Context context, String operationType, PointPayment paymentFlowState){
+    public void startFlow (ActionMapper actionMapper, String operationType, PointPayment paymentFlowState){
         //TODO: cargar flow con json
         flow = new Flow();
-        this.context = context;
+        this.actionMapper = actionMapper;
         this.paymentFlowState = paymentFlowState;
         executeNextStep(null);
 

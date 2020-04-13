@@ -1,0 +1,20 @@
+[
+  {
+    "name": "CALCULATOR",
+    "deep_link": "mercadopago://calculator"
+  },
+  {
+    "name": "CHOOSER",
+    "deep_link": "mercadopago://calculator"
+  },
+  {
+    "name": "INSTALLMENTS",
+    "deep_link": "mercadopago://calculator"
+  },
+  {
+    "name": "POS_SELECTOR",
+    "deep_link": "mercadopago://calculator"
+  }
+]
+
+
