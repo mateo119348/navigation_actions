@@ -5,15 +5,15 @@
   },
   {
     "name": "CHOOSER",
-    "deep_link": "mercadopago://calculator"
+    "deep_link": "mercadopago://chooser"
   },
   {
     "name": "INSTALLMENTS",
-    "deep_link": "mercadopago://calculator"
+    "deep_link": "mercadopago://installments"
   },
   {
     "name": "POS_SELECTOR",
-    "deep_link": "mercadopago://calculator"
+    "deep_link": "mercadopago://pos_selector"
   }
 ]
 
