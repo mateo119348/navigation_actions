@@ -1,6 +1,5 @@
 package com.example.navigation.action;
 
-import android.content.Context;
 import android.util.ArrayMap;
 
 import com.example.navigation.stepsEngine.flow.Flow;
@@ -19,13 +18,12 @@ import java.util.List;
 public class ActionsManager {
 
     private static ActionsManager instance;
-    private ArrayMap<String, Action> actions;
-    private PointPayment paymentFlowState;
-    private List<Action> currentActions;
-    private Action currentAction;
-    private Action prevAction;
-    private Step currentStep;
-    private Flow flow;
+    private ArrayMap<String, RuleAction> actions;
+    private static PointPayment paymentFlowState;
+    private List<RuleAction> currentActions;
+    private RuleAction currentAction;
+    private static Step currentStep;
+    private static Flow flow;
     private int currentActionIndex;
     private ActionMapper actionMapper;
     //private Context context;
@@ -41,7 +39,7 @@ public class ActionsManager {
 
 
 
-    private ArrayMap<String, Action> getActions(){
+    private ArrayMap<String, RuleAction> getActions(){
         if (actions == null){
             actions = loadActions();
         }
@@ -73,34 +71,12 @@ public class ActionsManager {
         return retval;
     }
 
-    private boolean isLastAction(){
-        return currentActionIndex == getCurrentActions().size() - 1;
-    }
-
-    /**
-     * Se evalua si la action cumple o no las reglas para pasar al siguiente action o step
-     * @param mCurrentAction
-     */
-    public void validateAndContinue (Action mCurrentAction) {
-        Rule currentRule = getCurrentStep().getRule();
-
-        //Actualuizo el paymentFlowState con los fields que cargue en la action a evaluar
-        upadatePaymentFlowState(mCurrentAction.getFields(), paymentFlowState);
-
-        if (validate(mCurrentAction, currentRule)) {
-            executeNext(mCurrentAction);
-        };
-
-
-    }
-
-    public boolean validate(Action mCurrentAction,  Rule currentRule) {
-        boolean retval = true;
+    private boolean validateAll(Action mCurrentAction,  Rule currentRule) {
 
         //Si la regla del Step es del tipo AND (debo hacer que no cumpla al menos una sub rule para salir del step)
         //Estas se evaluan en el ultimo action. Ante la primera que cumple, muestro el error
         if (currentRule instanceof AndRule) {
-            if (isLastAction()) {
+            if (isLastAction() && currentRule.evaluate(paymentFlowState)) {
                 for (Rule subRule : ((AndRule)currentRule).getSubRules()) {
                     if (subRule.evaluate(paymentFlowState)) {
                         mCurrentAction.resolveUnfullfiledRule(subRule);
@@ -128,9 +104,77 @@ public class ActionsManager {
                     return false;
                 }
             }
+        } else {
+
         }
         return true;
     }
+
+
+    private boolean isLastAction(){
+        return currentActionIndex == getCurrentActions().size() - 1;
+    }
+
+    /**
+     * Se intstancia el flow correspondiente al tipo de operacion, inicializa el json
+     * ActionMapper: es donde se crean las instancias de las actions con lo necesario para implementar en android
+     */
+    public void startFlow (ActionMapper actionMapper, String operationType, PointPayment paymentFlowState){
+        {
+            //TODO: cargar flow con json
+            flow = new Flow();
+            this.actionMapper = actionMapper;
+            this.paymentFlowState = paymentFlowState;
+            executeNextStep(null);}
+    }
+
+    /**
+     * Validacion de reglas que pertenecen a campos especificados en List<Field> fields (no se evalua toda la rule aca)
+     * @param mCurrentAction accion actual, que en caso de no cumplir con la/s regla/s sabe como resolverla
+     * @param fields campos a validar
+     * @return
+     */
+    public static boolean validate(Action mCurrentAction, List<Field> fields){
+        {
+            Rule currentRule = getCurrentStep().getRule();
+
+            upadatePaymentFlowState(fields, paymentFlowState);
+
+            List<Rule> currentRules = getCurrentSubRules(fields, currentRule);
+
+            for (Rule subRule : currentRules) {
+                if (subRule.evaluate(paymentFlowState)) {
+                    mCurrentAction.resolveUnfullfiledRule(subRule);
+                    return false;
+                }
+            }
+
+
+            return true;
+        }
+    }
+    /**
+     * Se evalua si la action cumple o no las reglas para pasar al siguiente action o step.
+     * Se actualizan todos los campos que resuelve la action actual para luego evaluar la regla de forma parcial (si no es el ultimo action del step)
+     * o total si ya no tengo mas acciones por cumplir y requiero pasar al proximo step
+     * @param mCurrentAction
+     */
+    public void next (Action mCurrentAction) {
+        {
+            Rule currentRule = getCurrentStep().getRule();
+
+            //Actualuizo el paymentFlowState con los fields que cargue en la action a evaluar
+            upadatePaymentFlowState(mCurrentAction.getFields(), paymentFlowState);
+
+            if (validateAll(mCurrentAction, currentRule)) {
+                executeNext(mCurrentAction);
+            }
+            ;
+
+        }
+    }
+
+
 
     /**
      * Se busca el mejor listado de acciones que satisfagan el step actual. Debemos tener en cuenta las siguientes precondiciones:
@@ -149,8 +193,8 @@ public class ActionsManager {
      *      Ej: acción 1 matchea A y B, y acción 2 solo matchea B, entonces gana acción 1.
      * 3- Si hay dos acciones que matchean los mismos fields requeridos, se toma entonces la que matchee más fields opcionales.
      */
-    public List<Action> getRuleActions (Rule rule){
-        List<Action> retval = new ArrayList<>();
+    private List<RuleAction> getRuleActions (Rule rule){
+        List<RuleAction> retval = new ArrayList<>();
 
         //TODO: implementar
         return retval;
@@ -159,37 +203,37 @@ public class ActionsManager {
     /**
      * Carga de actions del json
      */
-    private ArrayMap<String, Action> loadActions(){
-        ArrayMap<String, Action> retval = new ArrayMap<>();
+    private ArrayMap<String, RuleAction> loadActions(){
+        ArrayMap<String, RuleAction> retval = new ArrayMap<>();
 
         //TODO:Implementar
 
         return retval;
     }
 
-    public void validateB(Action mCurrentAction){
-
-        upadatePaymentFlowState(mCurrentAction.getFields(), paymentFlowState);
-
-
-
-        //Donde y como impacta la evaluacion de campos no obligatorios?
-        for (com.example.navigation.stepsEngine.flow.Field ruleField :getCurrentStep().getRequiredFields()) {
-            for (Field actionField: mCurrentAction.getFields()) {
-                if (ruleField.getId().equals(actionField.getName())){
-                    for (Rule rule: ruleField.getRules()) {
-                        if (!rule.evaluate(paymentFlowState)){
-                            mCurrentAction.resolveUnfullfiledRule(rule);
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-
-
-        executeNext(mCurrentAction);
-    }
+//    public void validateB(Action mCurrentAction){
+//
+//        upadatePaymentFlowState(mCurrentAction.getFields(), paymentFlowState);
+//
+//
+//
+//        //Donde y como impacta la evaluacion de campos no obligatorios?
+////        for (Field ruleField :getCurrentStep().getRequiredFields()) {
+////            for (Field actionField: mCurrentAction.getFields()) {
+////                if (ruleField.getName().equals(actionField.getName())){
+////                    for (Rule rule: ruleField.getRules()) {
+////                        if (!rule.evaluate(paymentFlowState)){
+////                            mCurrentAction.resolveUnfullfiledRule(rule);
+////                            return;
+////                        }
+////                    }
+////                }
+////            }
+////        }
+//
+//
+//        executeNext(mCurrentAction);
+//    }
 
 
     /**
@@ -200,7 +244,7 @@ public class ActionsManager {
         if (!isLastAction()){
             currentActionIndex++;
             currentAction = null;
-            actionMapper.executeAction(mCurrentAction, paymentFlowState);
+            executeAction(getCurrentAction());
         }  else if (!getCurrentStep().mustExecute(paymentFlowState)) {
             executeNextStep(mCurrentAction);
         } else {
@@ -210,54 +254,51 @@ public class ActionsManager {
     }
 
     private void executeNextStep(Action mCurrentAction){
-        currentStep = null;
-        currentActions = null;
-        currentAction = null;
-        currentActionIndex = 0;
+        initStep();
 
         if (mCurrentAction != null && getCurrentAction().getName().equals(mCurrentAction.getName())){
-            executeAction(mCurrentAction);
+            executeNextField(mCurrentAction);
         } else {
             executeAction(getCurrentAction());
         }
     }
 
-    private void executeAction(Action action) {
+    private void initStep() {
+        currentStep = null;
+        currentActions = null;
+        currentAction = null;
+        currentActionIndex = 0;
+    }
+
+    private void executeAction(RuleAction action) {
         actionMapper.executeAction(action, getCurrentStep().getRequiredFields(), getCurrentStep().getOptionalFields());
     }
 
-    /**
-     * Se intstancia el flow correspondiente al tipo de operacion
-     * @param operationType
-     */
-    public void startFlow (ActionMapper actionMapper, String operationType, PointPayment paymentFlowState){
-        //TODO: cargar flow con json
-        flow = new Flow();
-        this.actionMapper = actionMapper;
-        this.paymentFlowState = paymentFlowState;
-        executeNextStep(null);
-
+    private void executeNextField(Action action) {
+        actionMapper.executeNextField(action, getCurrentStep().getRequiredFields(), getCurrentStep().getOptionalFields());
     }
 
-    private void upadatePaymentFlowState (List<Field> field, PointPayment paymentFlowState){
+
+
+    private static void upadatePaymentFlowState (List<Field> field, PointPayment paymentFlowState){
         //TODO: implementar: tomar los valores de cada field y actualizarlos al paymentFlowState
     }
 
-    private Step getCurrentStep(){
+    private static Step getCurrentStep(){
         if (currentStep == null){
             currentStep = flow.getNext(paymentFlowState);
         }
         return currentStep;
     }
 
-    private List<Action> getCurrentActions(){
+    private List<RuleAction> getCurrentActions(){
         if (currentActions == null){
             currentActions = getRuleActions(getCurrentStep().getRule());
         }
         return currentActions;
     }
 
-    private Action getCurrentAction() {
+    private RuleAction getCurrentAction() {
         if (currentAction == null) {
             currentAction = getCurrentActions().get(currentActionIndex);
         }

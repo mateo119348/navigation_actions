@@ -2,5 +2,7 @@ package com.example.navigation.action;
 
 public interface ActionMapper {
 
-    void executeAction(Action action, Object...params);
+    void executeAction(RuleAction action, Object...params);
+
+    void executeNextField(Action action, Object... params);
 }

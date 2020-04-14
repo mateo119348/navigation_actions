@@ -1,5 +1,6 @@
 package com.example.navigation.stepsEngine.flow;
 
+import com.example.navigation.action.Field;
 import com.example.navigation.stepsEngine.enums.StepIdentifier;
 import com.example.navigation.stepsEngine.flow.rules.base.Rule;
 import com.example.navigation.stepsEngine.payment.PointPayment;

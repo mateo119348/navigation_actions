@@ -22,7 +22,9 @@ public class CalculatorActivity extends AppCompatActivity implements Action {
     }
 
     @Override
-    public void execute(Object... params) {
+    public void execute(List<Field> newFields) {
+
+
 
     }
 

@@ -20,8 +20,9 @@ public class PosSelectorActivity extends AppCompatActivity implements Action {
         setContentView(R.layout.activity_pos_selector);
     }
 
+
     @Override
-    public void execute(Object... params) {
+    public void execute(List<Field> newFields) {
 
     }
 
