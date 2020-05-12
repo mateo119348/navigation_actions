@@ -25,6 +25,7 @@ public class Card {
     private String firstSixDigits;
     private String lastFourDigits;
     private String serviceCode;
+    private String cvv;
 
     public Card(){
         final Pin pin = new Pin();
@@ -184,4 +185,7 @@ public class Card {
         this.serviceCode = serviceCode;
     }
 
+    public String getCvv() {
+        return cvv;
+    }
 }

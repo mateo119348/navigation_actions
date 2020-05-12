@@ -1,7 +1,7 @@
 package com.example.navigation.stepsEngine.flow.rules.comparable.string;
 
 import com.example.navigation.stepsEngine.flow.rules.comparable.ComparableRule;
-import com.example.navigation.stepsEngine.payment.PointPayment;
+import com.example.navigation.stepsEngine.payment.FlowState;
 
 public class StringContainsRule extends ComparableRule {
 
@@ -16,8 +16,8 @@ public class StringContainsRule extends ComparableRule {
     }
 
     @Override
-    public boolean evaluate(PointPayment pointPayment) {
-        return ((String) getFieldManager().get(pointPayment)).contains(value);
+    public boolean evaluate(FlowState flowState) {
+        return ((String) getField().get(flowState)).contains(value);
     }
 
 }

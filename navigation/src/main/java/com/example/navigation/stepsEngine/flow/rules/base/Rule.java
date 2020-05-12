@@ -9,7 +9,7 @@ import com.example.navigation.stepsEngine.flow.rules.comparable.string.*;
 import com.example.navigation.stepsEngine.flow.rules.logic.AndRule;
 import com.example.navigation.stepsEngine.flow.rules.logic.NotRule;
 import com.example.navigation.stepsEngine.flow.rules.logic.OrRule;
-import com.example.navigation.stepsEngine.payment.PointPayment;
+import com.example.navigation.stepsEngine.payment.FlowState;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
@@ -17,23 +17,19 @@ import com.example.navigation.stepsEngine.payment.PointPayment;
         @JsonSubTypes.Type(value = NotRule.class, name = RuleIdentifiers.NOT),
         @JsonSubTypes.Type(value = OrRule.class, name = RuleIdentifiers.OR),
         @JsonSubTypes.Type(value = NullRule.class, name = RuleIdentifiers.NULL),
-        @JsonSubTypes.Type(value = StringEqualsRule.class, name = RuleIdentifiers.STRING_EQUALS),
-        @JsonSubTypes.Type(value = IsGreaterThanRule.class, name = RuleIdentifiers.IS_GREATER_THAN),
-        @JsonSubTypes.Type(value = IsLowerEqualThanRule.class, name = RuleIdentifiers.IS_LOWER_EQUAL_THAN),
+        @JsonSubTypes.Type(value = EqualsRule.class, name = RuleIdentifiers.EQUALS),
+        @JsonSubTypes.Type(value = GreaterThanRule.class, name = RuleIdentifiers.GREATER_THAN),
+        @JsonSubTypes.Type(value = LessEqualThanRule.class, name = RuleIdentifiers.LESS_EQUAL_THAN),
         @JsonSubTypes.Type(value = StringContainsRule.class, name = RuleIdentifiers.STRING_CONTAINS),
-        @JsonSubTypes.Type(value = StringEmptyRule.class, name = RuleIdentifiers.STRING_EMPTY),
         @JsonSubTypes.Type(value = StringIsContainedRule.class, name = RuleIdentifiers.STRING_IS_CONTAINED),
-        @JsonSubTypes.Type(value = StringInListRule.class, name = RuleIdentifiers.STRING_IN_LIST),
-        @JsonSubTypes.Type(value = BooleanEqualsRule.class, name = RuleIdentifiers.BOOLEAN_EQUALS)})
+        @JsonSubTypes.Type(value = StringInListRule.class, name = RuleIdentifiers.STRING_IN_LIST)})
 public abstract class Rule {
 
     /**
      * Evaluates this rule and any sub rule contained in it
      *
-     * @param pointPayment the current payment information. Must NOT be <code>null</code>.
+     * @param flowState the current payment information. Must NOT be <code>null</code>.
      * @return The result of the evaluation
      */
-    public abstract boolean evaluate(final PointPayment pointPayment);
-
-    public abstract String getFieldName();
+    public abstract boolean evaluate(final FlowState flowState);
 }

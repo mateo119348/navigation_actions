@@ -1,10 +1,14 @@
 package com.example.navigation.action;
 
-public abstract class Field {
+public class Field {
 
     Object value;
 
-    public abstract String getName();
+    String id;
+
+    public String getId(){
+        return id;
+    }
 
     public Object getValue() {
         return value;

@@ -6,17 +6,17 @@ import java.util.List;
 
 public abstract class LogicRule extends Rule {
 
-    private List<Rule> subRules;
+    private List<Rule> rules;
 
-    public List<Rule> getSubRules() {
-        return subRules;
+    public List<Rule> getRules() {
+        return rules;
     }
 
-    public void setSubRules(List<Rule> subRules) {
-        this.subRules = subRules;
+    public void setRules(List<Rule> rules) {
+        this.rules = rules;
     }
 
-    @Override
+
     public String getFieldName() {
         throw new IllegalArgumentException("LogicRule must not have a related field name");
     }

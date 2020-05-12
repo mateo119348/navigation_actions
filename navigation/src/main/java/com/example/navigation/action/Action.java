@@ -1,7 +1,7 @@
 package com.example.navigation.action;
 
 import com.example.navigation.stepsEngine.flow.rules.base.Rule;
-import com.example.navigation.stepsEngine.payment.PointPayment;
+import com.example.navigation.stepsEngine.payment.FlowState;
 
 import java.util.List;
 
@@ -30,5 +30,5 @@ public interface Action {
      * @param fields
      * @param paymentFlowState
      */
-    void backStepState(List<Field> fields, PointPayment paymentFlowState);
+    void backStepState(List<Field> fields, FlowState paymentFlowState);
 }

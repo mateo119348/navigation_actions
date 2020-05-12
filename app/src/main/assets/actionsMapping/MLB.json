@@ -1,0 +1,14 @@
+{
+    "actions": {
+      "CALCULATOR": "mercadopago://calculator",
+      "DESCRIPTION": "mercadopago://description",
+      "CHOOSER": "mercadopago://chooser",
+      "INSTALLMENTS": "mercadopago://installments",
+      "POS_SELECTOR": "mercadopago://pos_selector"
+    }
+}
+
+
+
+
+

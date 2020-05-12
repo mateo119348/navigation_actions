@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.example.navigation.stepsEngine.payment.PointPayment;
+import com.example.navigation.stepsEngine.payment.FlowState;
 import com.example.navigation.action.Action;
 import com.example.navigation.action.Field;
 import com.example.navigation.stepsEngine.flow.rules.base.Rule;
@@ -20,10 +20,6 @@ public class ChooserActivity extends AppCompatActivity implements Action {
         setContentView(R.layout.activity_chooser);
     }
 
-    @Override
-    public void execute(Object... params) {
-
-    }
 
     @Override
     public String getName() {
@@ -46,7 +42,12 @@ public class ChooserActivity extends AppCompatActivity implements Action {
     }
 
     @Override
-    public void backStepState(List<Field> fields, PointPayment paymentFlowState) {
+    public void execute(List<Field> newFields) {
+
+    }
+
+    @Override
+    public void backStepState(List<Field> fields, FlowState paymentFlowState) {
 
     }
 }

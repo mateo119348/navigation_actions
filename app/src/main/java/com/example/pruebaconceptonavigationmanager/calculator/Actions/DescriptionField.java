@@ -4,7 +4,7 @@ import com.example.navigation.action.Field;
 
 public class DescriptionField extends Field {
     @Override
-    public String getName() {
+    public String getId() {
         return "DESCRIPTION";
     }
 }

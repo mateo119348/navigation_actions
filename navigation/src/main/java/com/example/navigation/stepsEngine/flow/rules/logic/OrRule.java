@@ -1,18 +1,19 @@
 package com.example.navigation.stepsEngine.flow.rules.logic;
 
+import com.example.navigation.stepsEngine.field.FlowStateField;
 import com.example.navigation.stepsEngine.flow.rules.base.Rule;
 import com.example.navigation.stepsEngine.flow.rules.base.RuleIdentifiers;
-import com.example.navigation.stepsEngine.payment.PointPayment;
+import com.example.navigation.stepsEngine.payment.FlowState;
 
 public class OrRule extends LogicRule {
 
     @Override
-    public boolean evaluate(final PointPayment pointPayment) {
-        if (getSubRules().size() < 2) {
+    public boolean evaluate(final FlowState flowState) {
+        if (getRules().size() < 2) {
             throw new IllegalArgumentException(String.format("%s rule must have at least two sub rules", RuleIdentifiers.OR));
         }
-        for (Rule subRule : getSubRules()) {
-            if (subRule.evaluate(pointPayment)) {
+        for (Rule subRule : getRules()) {
+            if (subRule.evaluate(flowState)) {
                 return true;
             }
         }

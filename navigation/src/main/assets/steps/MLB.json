@@ -1,0 +1,273 @@
+{
+  "operation_type": "AUTHORIZATION",
+  "validations": [
+    {
+    "field": "AMOUNT",
+    "rule":
+      {
+          "type": "AND",
+          "rules": [
+            {
+              "type": "GREATER_THAN",
+              "field": {"id": "AMOUNT"},
+              "count": 0
+            },
+            {
+              "type": "LESS_EQUAL_THAN",
+              "field": {"id": "AMOUNT"},
+              "count": 50000
+            }
+          ]
+      }
+
+
+  }
+  ],
+  "steps": [
+    {
+      "step_identifier": "AMOUNT",
+      "required_fields": ["AMOUNT", "DESCRIPTION"],
+      "optional_fields": [ "CART"],
+      "rule": {
+        "type": "NULL",
+        "field": {"id": "AMOUNT"}
+      }
+    },
+    {
+      "step_identifier": "RESERVATION",
+      "rule": {
+        "type": "AND",
+        "rules": [
+          {
+            "type": "EQUALS",
+            "field": {"id": "IS_RESERVATION"},
+            "value_type": "bool",
+            "value": true
+          },
+          {
+            "type": "NULL",
+            "field": {"id": "RESERVATION_EMAIL"}
+          }
+        ]
+      }
+    },
+    {
+      "step_identifier": "CARD_TYPE",
+      "required_fields" : ["CARD_TYPE"],
+      "optional_fields" : [],
+      "rule": {
+        "type": "NULL",
+        "field": {"id": "CARD_TYPE"}
+      }
+    },
+    {
+      "step_identifier": "INSTALLMENTS",
+      "required_fields" : ["INSTALLMENTS"],
+      "optional_fields" : [],
+      "rule": {
+        "type": "AND",
+        "rules": [
+          {
+            "type": "GREATER_THAN",
+            "field": {"id": "AMOUNT"},
+            "count": 10
+          },
+          {
+            "type": "EQUALS",
+            "field": {"id": "CARD_TYPE"},
+            "value_type": "string",
+            "value": "CREDIT_CARD"
+          }
+        ]
+      }
+    },
+    {
+      "step_identifier": "POS_SELECTION",
+      "required_fields" : ["DEVICE"],
+      "optional_fields" : [],
+      "rule": {
+        "type": "NULL",
+        "field": {"id": "DEVICE"}
+      }
+    },
+    {
+      "step_identifier": "CONNECT",
+      "required_fields" : ["IS_DEVICE_CONNECTED"],
+      "optional_fields" : [],
+      "rule": {
+        "type": "EQUALS",
+        "field": {"id": "IS_DEVICE_CONNECTED"},
+        "value_type": "bool",
+        "value": false
+      }
+    },
+    {
+      "step_identifier": "CARD_INFORMATION",
+      "required_fields" : ["CARD_TAG"],
+      "optional_fields" : []
+    },
+    {
+      "step_identifier": "DISCONNECT",
+      "required_fields" : [],
+      "optional_fields" : [],
+      "rule": {
+        "type": "AND",
+        "rules": [
+          {
+            "type": "STRING_IN_LIST",
+            "field": {"id": "CARD_TAG"},
+            "values": ["SWIPE", "SWIPE_NFC", "CHIP_FNC"]
+          },
+          {
+            "type": "EQUALS",
+            "field": {"id": "IS_DEVICE_CONNECTED"},
+            "value_type": "bool",
+            "value": true
+          }
+        ]
+      }
+    },
+    {
+      "step_identifier": "ASK_PIN_WHEN_SWIPE",
+      "required_fields" : [],
+      "optional_fields" : [],
+      "rule": {
+        "type": "AND",
+        "rules": [
+          {
+            "type": "EQUALS",
+            "field": {"id": "CARD_TAG"},
+            "value_type": "string",
+            "value": "SWIPE"
+          },
+          {
+            "type": "NULL",
+            "field": {"id": "SERVICE_CODE"},
+            "not":true
+          },
+          {
+            "type": "EQUALS",
+            "field": {"id": "SERVICE_CODE"},
+            "value_type": "string",
+            "value": ""
+          },
+          {
+            "type": "STRING_IS_CONTAINED",
+            "field": {"id": "SERVICE_CODE"},
+            "value": "0567",
+            "start": 2,
+            "end": 3
+          },
+          {
+            "type": "STRING_IN_LIST",
+            "field": {"id": "DEVICE_TYPE"},
+            "values": [
+              "PAX_D180",
+              "PAX_A910",
+              "PAX_D200",
+              "INGENICO_MOVE2500"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "step_identifier": "CVV",
+      "required_fields" : ["CVV"],
+      "optional_fields" : [],
+      "rule": {
+        "type": "AND",
+        "rules": [
+          {
+            "type": "EQUALS",
+            "field": {"id": "PIN_TYPE"},
+            "value_type": "string",
+            "value": "NONE"
+          },
+          {
+            "type": "EQUALS",
+            "field": {"id": "CARD_TAG"},
+            "value_type": "string",
+            "value": "SWIPE"
+          }
+        ]
+      }
+    },
+    {
+      "step_identifier": "FINALIZE_CARD",
+      "required_fields" : [],
+      "optional_fields" : [],
+      "rule": {
+        "type": "EQUALS",
+        "field": {"id": "CARD_TAG"},
+        "value_type": "string",
+        "value": "CHIP"
+      }
+    },
+    {
+      "step_identifier": "ADVICE",
+      "required_fields" : [],
+      "optional_fields" : [],
+      "rule": {
+        "type": "AND",
+        "rules": [
+          {
+            "type": "EQUALS",
+            "field": {"id": "CARD_TAG"},
+            "value_type": "string",
+            "value": "CHIP"
+          },
+          {
+            "type": "EQUALS",
+            "field": {"id": "PAYMENT_STATUS"},
+            "value_type": "string",
+            "value": "APPROVED"
+          },
+          {
+            "type": "EQUALS",
+            "field": {"id": "ACQUIRER"},
+            "value_type": "string",
+            "value": "FEPAS"
+          }
+        ]
+      }
+    },
+    {
+      "step_identifier": "DISCONNECT",
+      "required_fields" : ["DISCONNECT"],
+      "optional_fields" : [],
+      "rule": {
+        "type": "EQUALS",
+        "field": {"id": "IS_DEVICE_CONNECTED"},
+        "value_type": "string",
+        "value": true
+      }
+    },
+    {
+      "step_identifier": "SIGN",
+      "required_fields" : ["SIGN"],
+      "optional_fields" : [],
+      "rule": {
+        "type": "OR",
+        "rules": [
+          {
+            "type": "EQUALS",
+            "field": {"id": "MUST_COLLECT_SIGNATURE_EMV"},
+            "value_type": "bool",
+            "value": true
+          },
+          {
+            "type": "STRING_CONTAINS",
+            "field": {"id": "CARD_TAG"},
+            "value": "SWIPE"
+          }
+        ]
+      }
+    },
+    {
+      "step_identifier": "END",
+      "required_fields" : [],
+      "optional_fields" : []
+    }
+  ]
+}

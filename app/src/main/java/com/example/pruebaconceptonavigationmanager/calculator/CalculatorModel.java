@@ -2,12 +2,14 @@ package com.example.pruebaconceptonavigationmanager.calculator;
 
 import android.content.Context;
 
+import com.example.navigation.stepsEngine.payment.FlowState;
+
 public class CalculatorModel  {
 
-    PaymentFlowState paymentFlowState;
+    FlowState paymentFlowState;
     Context context;
 
-    public CalculatorModel(PaymentFlowState paymentFlowState, Context context) {
+    public CalculatorModel(FlowState paymentFlowState, Context context) {
         this.paymentFlowState = paymentFlowState;
         this.context = context;
     }
