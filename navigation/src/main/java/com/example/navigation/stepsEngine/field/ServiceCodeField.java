@@ -2,7 +2,7 @@ package com.example.navigation.stepsEngine.field;
 
 import com.example.navigation.stepsEngine.payment.FlowState;
 
-public class ServiceCodeField extends FlowStateField {
+public class ServiceCodeField extends Field {
 
     @Override
     public String get(FlowState flowState) {
@@ -10,8 +10,13 @@ public class ServiceCodeField extends FlowStateField {
     }
 
     @Override
-    public String getFieldName() {
+    public String getId() {
         return null;
+    }
+
+    @Override
+    public void set(FlowState flowState, Object value) {
+
     }
 
 }

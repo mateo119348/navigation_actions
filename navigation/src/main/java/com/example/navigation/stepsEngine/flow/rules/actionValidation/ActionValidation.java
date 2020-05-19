@@ -6,8 +6,13 @@ import java.util.List;
 
 public class ActionValidation {
 
+    String id;
     String field;
     Rule rule;
+
+    public String getId() {
+        return id;
+    }
 
     public String getField() {
         return field;

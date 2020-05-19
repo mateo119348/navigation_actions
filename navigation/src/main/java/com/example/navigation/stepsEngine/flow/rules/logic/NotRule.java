@@ -1,6 +1,5 @@
 package com.example.navigation.stepsEngine.flow.rules.logic;
 
-import com.example.navigation.stepsEngine.field.FlowStateField;
 import com.example.navigation.stepsEngine.flow.rules.base.RuleIdentifiers;
 import com.example.navigation.stepsEngine.payment.FlowState;
 

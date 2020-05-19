@@ -1,20 +1,20 @@
 package com.example.navigation.action;
 
-public class Field {
+public class Field2 {
 
     Object value;
 
     String id;
 
-    public String getId(){
+    public String getField(){
         return id;
     }
 
-    public Object getValue() {
+    public Object get() {
         return value;
     }
 
-    public void setValue(Object value){
+    public void set(Object value){
         this.value = value;
     }
 }

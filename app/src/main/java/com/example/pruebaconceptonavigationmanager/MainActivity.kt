@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             actionMapper = ActionMapperImpl(applicationContext)
             instance!!.startFlow(actionMapper, flow, flowState!!, actions)
         } catch (ex: Exception) {
-
+        var i = 0
         }
     }
 }

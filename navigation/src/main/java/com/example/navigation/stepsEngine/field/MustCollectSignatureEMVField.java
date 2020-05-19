@@ -2,7 +2,7 @@ package com.example.navigation.stepsEngine.field;
 
 import com.example.navigation.stepsEngine.payment.FlowState;
 
-public class MustCollectSignatureEMVField extends FlowStateField {
+public class MustCollectSignatureEMVField extends Field {
 
     @Override
     public Boolean get(FlowState flowState) {
@@ -10,8 +10,13 @@ public class MustCollectSignatureEMVField extends FlowStateField {
     }
 
     @Override
-    public String getFieldName() {
+    public String getId() {
         return null;
+    }
+
+    @Override
+    public void set(FlowState flowState, Object value) {
+
     }
 
 }

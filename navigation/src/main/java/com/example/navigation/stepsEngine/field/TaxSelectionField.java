@@ -2,7 +2,7 @@ package com.example.navigation.stepsEngine.field;
 
 import com.example.navigation.stepsEngine.payment.FlowState;
 
-public class TaxSelectionField extends FlowStateField {
+public class TaxSelectionField extends Field {
 
     @Override
     public String get(FlowState flowState) {
@@ -10,8 +10,13 @@ public class TaxSelectionField extends FlowStateField {
     }
 
     @Override
-    public String getFieldName() {
+    public String getId() {
         return null;
+    }
+
+    @Override
+    public void set(FlowState flowState, Object value) {
+
     }
 
 }

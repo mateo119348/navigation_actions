@@ -2,51 +2,52 @@
   "operation_type": "AUTHORIZATION",
   "validations": [
     {
-    "field": "AMOUNT",
-    "rule":
-      {
-          "type": "AND",
-          "rules": [
-            {
-              "type": "GREATER_THAN",
-              "field": {"id": "AMOUNT"},
-              "count": 0
-            },
-            {
-              "type": "LESS_EQUAL_THAN",
-              "field": {"id": "AMOUNT"},
-              "count": 50000
-            }
-          ]
-      }
-
-
+      "id": "AMOUNT_OUT_OF_RANGE",
+      "field": "AMOUNT",
+      "rule":
+        {
+            "type": "AND",
+            "rules": [
+              {
+                "type": "GREATER_THAN",
+                "field": "AMOUNT",
+                "count": 0
+              },
+              {
+                "type": "LESS_EQUAL_THAN",
+                "field":  "AMOUNT",
+                "count": 50000
+              }
+            ]
+        }
   }
   ],
   "steps": [
     {
       "step_identifier": "AMOUNT",
       "required_fields": ["AMOUNT", "DESCRIPTION"],
-      "optional_fields": [ "CART"],
+      "optional_fields": ["CART"],
       "rule": {
         "type": "NULL",
-        "field": {"id": "AMOUNT"}
+        "field": "AMOUNT"
       }
     },
     {
       "step_identifier": "RESERVATION",
+      "required_fields": ["RESERVATION_EMAIL"],
+      "optional_fields": [],
       "rule": {
         "type": "AND",
         "rules": [
           {
             "type": "EQUALS",
-            "field": {"id": "IS_RESERVATION"},
+            "field": "IS_RESERVATION",
             "value_type": "bool",
             "value": true
           },
           {
             "type": "NULL",
-            "field": {"id": "RESERVATION_EMAIL"}
+            "field": "RESERVATION_EMAIL"
           }
         ]
       }
@@ -57,7 +58,7 @@
       "optional_fields" : [],
       "rule": {
         "type": "NULL",
-        "field": {"id": "CARD_TYPE"}
+        "field": "CARD_TYPE"
       }
     },
     {
@@ -69,12 +70,12 @@
         "rules": [
           {
             "type": "GREATER_THAN",
-            "field": {"id": "AMOUNT"},
+            "field":  "AMOUNT",
             "count": 10
           },
           {
             "type": "EQUALS",
-            "field": {"id": "CARD_TYPE"},
+            "field": "CARD_TYPE",
             "value_type": "string",
             "value": "CREDIT_CARD"
           }
@@ -87,7 +88,7 @@
       "optional_fields" : [],
       "rule": {
         "type": "NULL",
-        "field": {"id": "DEVICE"}
+        "field":  "DEVICE"
       }
     },
     {
@@ -96,7 +97,7 @@
       "optional_fields" : [],
       "rule": {
         "type": "EQUALS",
-        "field": {"id": "IS_DEVICE_CONNECTED"},
+        "field":  "IS_DEVICE_CONNECTED",
         "value_type": "bool",
         "value": false
       }
@@ -115,12 +116,12 @@
         "rules": [
           {
             "type": "STRING_IN_LIST",
-            "field": {"id": "CARD_TAG"},
+            "field": "CARD_TAG",
             "values": ["SWIPE", "SWIPE_NFC", "CHIP_FNC"]
           },
           {
             "type": "EQUALS",
-            "field": {"id": "IS_DEVICE_CONNECTED"},
+            "field":  "IS_DEVICE_CONNECTED",
             "value_type": "bool",
             "value": true
           }
@@ -136,31 +137,31 @@
         "rules": [
           {
             "type": "EQUALS",
-            "field": {"id": "CARD_TAG"},
+            "field": "CARD_TAG",
             "value_type": "string",
             "value": "SWIPE"
           },
           {
             "type": "NULL",
-            "field": {"id": "SERVICE_CODE"},
+            "field": "SERVICE_CODE",
             "not":true
           },
           {
             "type": "EQUALS",
-            "field": {"id": "SERVICE_CODE"},
+            "field": "SERVICE_CODE",
             "value_type": "string",
             "value": ""
           },
           {
             "type": "STRING_IS_CONTAINED",
-            "field": {"id": "SERVICE_CODE"},
+            "field":  "SERVICE_CODE",
             "value": "0567",
             "start": 2,
             "end": 3
           },
           {
             "type": "STRING_IN_LIST",
-            "field": {"id": "DEVICE_TYPE"},
+            "field": "DEVICE_TYPE",
             "values": [
               "PAX_D180",
               "PAX_A910",
@@ -180,13 +181,13 @@
         "rules": [
           {
             "type": "EQUALS",
-            "field": {"id": "PIN_TYPE"},
+            "field": "PIN_TYPE",
             "value_type": "string",
             "value": "NONE"
           },
           {
             "type": "EQUALS",
-            "field": {"id": "CARD_TAG"},
+            "field": "CARD_TAG",
             "value_type": "string",
             "value": "SWIPE"
           }
@@ -199,7 +200,7 @@
       "optional_fields" : [],
       "rule": {
         "type": "EQUALS",
-        "field": {"id": "CARD_TAG"},
+        "field": "CARD_TAG",
         "value_type": "string",
         "value": "CHIP"
       }
@@ -213,19 +214,19 @@
         "rules": [
           {
             "type": "EQUALS",
-            "field": {"id": "CARD_TAG"},
+            "field": "CARD_TAG",
             "value_type": "string",
             "value": "CHIP"
           },
           {
             "type": "EQUALS",
-            "field": {"id": "PAYMENT_STATUS"},
+            "field": "PAYMENT_STATUS",
             "value_type": "string",
             "value": "APPROVED"
           },
           {
             "type": "EQUALS",
-            "field": {"id": "ACQUIRER"},
+            "field":  "ACQUIRER",
             "value_type": "string",
             "value": "FEPAS"
           }
@@ -238,7 +239,7 @@
       "optional_fields" : [],
       "rule": {
         "type": "EQUALS",
-        "field": {"id": "IS_DEVICE_CONNECTED"},
+        "field": "IS_DEVICE_CONNECTED",
         "value_type": "string",
         "value": true
       }
@@ -252,13 +253,13 @@
         "rules": [
           {
             "type": "EQUALS",
-            "field": {"id": "MUST_COLLECT_SIGNATURE_EMV"},
+            "field": "MUST_COLLECT_SIGNATURE_EMV",
             "value_type": "bool",
             "value": true
           },
           {
             "type": "STRING_CONTAINS",
-            "field": {"id": "CARD_TAG"},
+            "field": "CARD_TAG",
             "value": "SWIPE"
           }
         ]

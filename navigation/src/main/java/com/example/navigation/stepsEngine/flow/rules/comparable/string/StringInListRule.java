@@ -19,7 +19,7 @@ public class StringInListRule extends ComparableRule {
 
     @Override
     public boolean evaluate(FlowState flowState) {
-        return values.contains((String) getField().get(flowState));
+        return values.contains((String) getValue(flowState));
     }
 
 }

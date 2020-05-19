@@ -7,7 +7,7 @@ public class StringEmptyRule extends ComparableRule {
 
     @Override
     public boolean evaluate(FlowState flowState) {
-        return ((String) getField().get(flowState)).isEmpty();
+        return ((String) getValue(flowState)).isEmpty();
     }
 
 }

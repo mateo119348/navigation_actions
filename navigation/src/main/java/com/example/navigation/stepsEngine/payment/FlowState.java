@@ -15,7 +15,7 @@ public class FlowState {
     private Cart cart;
     private Pos pos;
     private Card card;
-    private BigDecimal amount;
+    private Long amount;
     private String description;
     private Identification buyerIdentification;
     private PaymentMethodWrapper paymentMethodWrapper;
@@ -70,11 +70,11 @@ public class FlowState {
         this.card = card;
     }
 
-    public BigDecimal getAmount() {
+    public Long getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Long amount) {
         this.amount = amount;
     }
 

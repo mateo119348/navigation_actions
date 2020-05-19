@@ -3,7 +3,7 @@ package com.example.navigation.stepsEngine.field;
 import com.example.navigation.stepsEngine.enums.AccountType;
 import com.example.navigation.stepsEngine.payment.FlowState;
 
-public class AccountTypeField extends FlowStateField {
+public class AccountTypeField extends Field {
 
     @Override
     public String get(FlowState flowState) {
@@ -16,8 +16,13 @@ public class AccountTypeField extends FlowStateField {
     }
 
     @Override
-    public String getFieldName() {
+    public String getId() {
         return null;
+    }
+
+    @Override
+    public void set(FlowState flowState, Object value) {
+
     }
 
 }

@@ -5,8 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import com.example.navigation.action.Action
 import com.example.navigation.action.ActionMapper
-import com.example.navigation.action.Field
 import com.example.navigation.action.RuleAction
+import com.example.navigation.stepsEngine.field.Field
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
@@ -40,7 +40,6 @@ class ActionMapperImpl(var context: Context) : ActionMapper {
      * @param params
      */
     override fun executeNextField(action: Action, vararg params: Any) {
-        val actionName = action.name
         action.execute(params[0] as List<Field?>)
     }
 

@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".actions.ActionAbstractActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -16,59 +17,64 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".posSelector.PosSelectorActivity" >
+        <activity android:name=".posSelector.PosSelectorActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="pos_selector"
-                    android:scheme="mercadopago"/>
+                    android:scheme="mercadopago" />
             </intent-filter>
         </activity>
-        <activity android:name=".chooser.ChooserActivity" >
+        <activity android:name=".chooser.ChooserActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="chooser"
-                    android:scheme="mercadopago"/>
+                    android:scheme="mercadopago" />
             </intent-filter>
         </activity>
-        <activity android:name=".description.DescriptionActivity" >
+        <activity android:name=".description.DescriptionActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="description"
-                    android:scheme="mercadopago"/>
+                    android:scheme="mercadopago" />
             </intent-filter>
         </activity>
-        <activity android:name=".installments.InstallmentsActivity" >
+        <activity android:name=".installments.InstallmentsActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="installments"
-                    android:scheme="mercadopago"/>
+                    android:scheme="mercadopago" />
             </intent-filter>
         </activity>
-        <activity android:name=".calculator.CalculatorActivity" >
+        <activity android:name=".calculator.CalculatorActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="calculator"
-                    android:scheme="mercadopago"/>
+                    android:scheme="mercadopago" />
             </intent-filter>
         </activity>
     </application>

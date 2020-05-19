@@ -4,11 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.example.navigation.stepsEngine.flow.rules.base.Rule;
+import com.example.navigation.stepsEngine.field.Field;
+import com.example.navigation.stepsEngine.flow.rules.actionValidation.ActionValidation;
 import com.example.navigation.stepsEngine.payment.FlowState;
 import com.example.pruebaconceptonavigationmanager.R;
 import com.example.navigation.action.Action;
-import com.example.navigation.action.Field;
 
 import java.util.List;
 
@@ -37,14 +37,16 @@ public class PosSelectorActivity extends AppCompatActivity implements Action {
     }
 
     @Override
-    public void resolveUnfullfiledRule(Rule unfulfilledRule) {
+    public void setFields(String idField, Object value) {
 
     }
 
     @Override
-    public void setField(String idField, Object value) {
+    public void resolveUnfullfiledRule(ActionValidation unfulfilledRule) {
 
     }
+
+
 
     @Override
     public void backStepState(List<Field> fields, FlowState paymentFlowState) {

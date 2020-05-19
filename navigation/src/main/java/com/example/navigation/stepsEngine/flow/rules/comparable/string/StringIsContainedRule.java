@@ -9,14 +9,6 @@ public class StringIsContainedRule extends ComparableRule {
     private Integer start;
     private Integer end;
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     public Integer getStart() {
         return start;
     }
@@ -36,7 +28,7 @@ public class StringIsContainedRule extends ComparableRule {
     @Override
     public boolean evaluate(FlowState flowState) {
         int from = start == null ? 0 : start;
-        final String string = (String) getField().get(flowState);
+        final String string = (String) getValue(flowState);
         int to = end == null ? string.length() : end;
         final String s = string.substring(from, to);
         return value.contains(s);

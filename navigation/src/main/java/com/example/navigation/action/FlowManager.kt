@@ -1,5 +1,6 @@
 package com.example.navigation.action
 
+import com.example.navigation.stepsEngine.field.Field
 import com.example.navigation.stepsEngine.flow.Flow
 import com.example.navigation.stepsEngine.flow.Step
 import com.example.navigation.stepsEngine.flow.rules.base.Rule
@@ -9,7 +10,7 @@ import com.example.navigation.stepsEngine.payment.FlowState
 import kotlin.collections.ArrayList
 
 class FlowManager {
-    private lateinit var paymentFlowState: FlowState
+    lateinit var paymentFlowState: FlowState private set
     private var currentActions: List<RuleAction>? = null
     private var currentAction: RuleAction? = null
     private var currentStep: Step? = null
@@ -23,23 +24,23 @@ class FlowManager {
      * @param attributes
      * @return
      */
-    private fun getCurrentSubRules(attributes: List<Field>, currentRule: Rule): List<Rule> {
-        val retval: MutableList<Rule> = ArrayList()
-        if (currentRule is LogicRule) {
-            for (subRule in currentRule.rules) {
-                retval.addAll(getCurrentSubRules(attributes, subRule))
-            }
-        } else if (currentRule is ComparableRule) {
-            for (attribute in attributes) {
-                if (attribute.getId() == currentRule.fieldName) {
-                    retval.add(currentRule)
-                }
-            }
-        }
-        return retval
-    }
+//    private fun getCurrentSubRules(attributes: List<Field>, currentRule: Rule): List<Rule> {
+//        val retval: MutableList<Rule> = ArrayList()
+//        if (currentRule is LogicRule) {
+//            for (subRule in currentRule.rules) {
+//                retval.addAll(getCurrentSubRules(attributes, subRule))
+//            }
+//        } else if (currentRule is ComparableRule) {
+//            for (attribute in attributes) {
+//                if (attribute.id == currentRule.fieldName) {
+//                    retval.add(currentRule)
+//                }
+//            }
+//        }
+//        return retval
+//    }
 
-    private fun validateAll(mCurrentAction: Action, currentRule: Rule): Boolean {
+    private fun validateAll(mCurrentAction: Action): Boolean {
 
         //Si la regla del Step es del tipo AND (debo hacer que no cumpla al menos una sub rule para salir del step)
         //Estas se evaluan en el ultimo action. Ante la primera que cumple, muestro el error
@@ -75,6 +76,10 @@ class FlowManager {
 //        } else {
 //
 //        }
+        mCurrentAction.fields.forEach {
+            if(!validate(mCurrentAction, it))
+                return false
+        }
         return true
     }
 
@@ -86,34 +91,45 @@ class FlowManager {
      * ActionMapper: es donde se crean las instancias de las actions con lo necesario para implementar en android
      */
     fun startFlow(actionMapper: ActionMapper?, flow: Flow?, paymentFlowState: FlowState, actions: List<RuleAction>?) {
-        run {
-            this.actions = actions
+        this.actions = actions
             this.flow = flow
             this.actionMapper = actionMapper
             this.paymentFlowState = paymentFlowState
             executeNextStep(null)
-        }
     }
 
     /**
      * Validacion de reglas que pertenecen a campos especificados en List<Field> fields (no se evalua toda la rule aca)
-     * @param mCurrentAction accion actual, que en caso de no cumplir con la/s regla/s sabe como resolverla
+     * @param currentAction accion actual, que en caso de no cumplir con la/s regla/s sabe como resolverla
      * @param fields campos a validar
      * @return
     </Field> */
-    fun validate(mCurrentAction: Action, fields: List<Field>): Boolean {
-        run {
-            val currentRule = getCurrentStep()!!.rule
-            upadatePaymentFlowState(fields, paymentFlowState)
-            val currentRules = getCurrentSubRules(fields, currentRule!!)
-            for (subRule in currentRules) {
-                if (subRule.evaluate(paymentFlowState)) {
-                    mCurrentAction.resolveUnfullfiledRule(subRule)
+    fun validate(currentAction: Action, field: Field): Boolean {
+//        val currentRule = getCurrentStep()!!.rule
+//            upadatePaymentFlowState(fields, paymentFlowState)
+//            val currentRules = getCurrentSubRules(fields, currentRule!!)
+//            for (subRule in currentRules) {
+//                if (subRule.evaluate(paymentFlowState)) {
+//                    mCurrentAction.resolveUnfullfiledRule(subRule)
+//                    return false
+//                }
+//            }
+        upadatePaymentFlowState(field, paymentFlowState)
+
+            val validations = flow!!.validations.filter { it -> it.field ==  field.getId() }
+
+            validations.forEach {
+                if(!it.rule.evaluate(paymentFlowState)) {
+                    currentAction.resolveUnfullfiledRule(it)
                     return false
                 }
             }
-            return true
-        }
+
+
+
+
+
+           return true
     }
 
     /**
@@ -123,16 +139,14 @@ class FlowManager {
      * @param mCurrentAction
      */
     fun next(mCurrentAction: Action) {
-        run {
-            val currentRule = getCurrentStep()!!.rule
+        val currentRule = getCurrentStep()!!.rule
 
-            //Actualuizo el paymentFlowState con los fields que cargue en la action a evaluar
-            upadatePaymentFlowState(mCurrentAction.fields, paymentFlowState)
-            if (validateAll(mCurrentAction, currentRule!!)) {
+
+            if (validateAll(mCurrentAction)) {
                 executeNext(mCurrentAction)
             }
-        }
     }
+
 
     /**
      * Se busca el mejor listado de acciones que satisfagan el step actual. Debemos tener en cuenta las siguientes precondiciones:
@@ -157,22 +171,22 @@ class FlowManager {
         var candidates : List<RuleAction>?
 
         candidates = actions?.filter {
-            it.toString().contains(currentStep?.requiredFieldsToString()!!)
+            toString().contains(currentStep?.requiredFieldsToString()!!)
         }
 
 
         if (candidates!!.isEmpty()) {
-            candidates  = actions?.filter { action : RuleAction ->
-                currentStep?.requiredFields?.forEach{ field ->
-                    if (action?.fields!!.containsKey(field)) {
+            candidates  = actions?.filter { action ->
+                currentStep?.requiredFields?.forEach{
+                    if (action?.fields!!.containsKey(it)) {
                         return@filter true
                     }
                 }
                 false
             }
         } else if (candidates!!.size > 1){
-            candidates = candidates?.filter { it2 ->
-                it2.toString().contains(currentStep?.optionalFieldsToString()!!)
+            candidates = candidates?.filter {
+                toString().contains(currentStep?.optionalFieldsToString()!!)
             }
         }
 
@@ -219,7 +233,7 @@ class FlowManager {
         actionMapper!!.executeNextField(action, getCurrentStep()!!.requiredFields, getCurrentStep()!!.optionalFields)
     }
 
-    private fun upadatePaymentFlowState(field: List<Field>, paymentFlowState: FlowState?) {
+    private fun upadatePaymentFlowState(field: Field, paymentFlowState: FlowState?) {
         //TODO: implementar: tomar los valores de cada field y actualizarlos al paymentFlowState
     }
 
@@ -243,6 +257,8 @@ class FlowManager {
         }
         return currentAction
     }
+
+
 
     companion object {
         //private Context context;
