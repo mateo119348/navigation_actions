@@ -15,7 +15,7 @@ abstract class ActionAbstractActivity : AppCompatActivity(), Action {
     }
 
     override fun setFields(idField: String, value: Any) {
-        val flowState = FlowManager.instance?.paymentFlowState
+        val flowState = FlowManager.i?.paymentFlowState
 
         var field = getFields()!!.first {  it.getId() == idField }
 

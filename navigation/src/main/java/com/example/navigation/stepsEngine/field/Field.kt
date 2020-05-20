@@ -31,7 +31,7 @@ abstract class Field {
 
     companion object {
         @JvmStatic
-        fun getFlowStateField(field : String): Field? {
+        fun getFlowStateField(field : String, informError : Boolean = true): Field? {
             return when (field!!){
                 FieldName.ACQUIRER -> AcquirerField()
                 FieldName.PAYMENT_METHOD_ID -> PaymentMethodIdField()
@@ -50,7 +50,10 @@ abstract class Field {
                 FieldName.ACCOUNT_TYPE -> AccountTypeField()
                 FieldName.CARD_TYPE -> CardTypeField()
                 FieldName.CARD_TAG -> CardTagField()
-                else -> throw IllegalStateException("Revisar los fields: key de field inexistente o falta mapeo")
+                else -> {if (informError)
+                            throw IllegalStateException("Revisar los fields: key de field inexistente o falta mapeo")
+                         else
+                            return null}
             }
         }
     }

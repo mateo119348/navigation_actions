@@ -3,7 +3,7 @@ package com.example.pruebaconceptonavigationmanager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.navigation.action.FlowManager
-import com.example.navigation.action.FlowManager.Companion.instance
+import com.example.navigation.action.FlowManager.Companion.i
 import com.example.navigation.action.RuleAction
 import com.example.navigation.stepsEngine.flow.Flow
 import com.example.navigation.stepsEngine.payment.FlowState
@@ -15,10 +15,9 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 
 class MainActivity : AppCompatActivity() {
 
-    var flow: Flow? = null
-    var actions: List<RuleAction>? = null
-    var flowManager: FlowManager? = null
-    var actionMapper: ActionMapperImpl? = null
+    private lateinit var flow: Flow
+    private lateinit var actions: List<RuleAction>
+    private lateinit var actionMapper: ActionMapperImpl
     private var flowState: FlowState = FlowState()
 
 
@@ -42,9 +41,9 @@ class MainActivity : AppCompatActivity() {
             inputStreamSteps.close()
             inputStreamActions.close()
             actionMapper = ActionMapperImpl(applicationContext)
-            instance!!.startFlow(actionMapper, flow, flowState!!, actions)
+            i!!.startFlow(actionMapper, flow, flowState!!, actions)
         } catch (ex: Exception) {
-        var i = 0
+            var i = 0
         }
     }
 }

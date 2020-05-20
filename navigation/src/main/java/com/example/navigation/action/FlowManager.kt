@@ -11,75 +11,21 @@ import kotlin.collections.ArrayList
 
 class FlowManager {
     lateinit var paymentFlowState: FlowState private set
+    private lateinit var actionMapper: ActionMapper
+    private lateinit var flow: Flow
     private var currentActions: List<RuleAction>? = null
     private var currentAction: RuleAction? = null
     private var currentStep: Step? = null
-    private var flow: Flow? = null
     private var actions: List<RuleAction>? = null
     private var currentActionIndex = 0
-    private var actionMapper: ActionMapper? = null
 
-    /**
-     *
-     * @param attributes
-     * @return
-     */
-//    private fun getCurrentSubRules(attributes: List<Field>, currentRule: Rule): List<Rule> {
-//        val retval: MutableList<Rule> = ArrayList()
-//        if (currentRule is LogicRule) {
-//            for (subRule in currentRule.rules) {
-//                retval.addAll(getCurrentSubRules(attributes, subRule))
-//            }
-//        } else if (currentRule is ComparableRule) {
-//            for (attribute in attributes) {
-//                if (attribute.id == currentRule.fieldName) {
-//                    retval.add(currentRule)
-//                }
-//            }
-//        }
-//        return retval
-//    }
 
     private fun validateAll(mCurrentAction: Action): Boolean {
-
-        //Si la regla del Step es del tipo AND (debo hacer que no cumpla al menos una sub rule para salir del step)
-        //Estas se evaluan en el ultimo action. Ante la primera que cumple, muestro el error
-//        if (currentRule instanceof AndRule) {
-//            if (isLastAction() && currentRule.evaluate(paymentFlowState)) {
-//                for (Rule subRule : ((AndRule)currentRule).getRules()) {
-//                    if (subRule.evaluate(paymentFlowState)) {
-//                        mCurrentAction.resolveUnfullfiledRule(subRule);
-//                        return false;
-//                    }
-//                }
-//            }
-//        }
-        //Si la regla del Step es del tipo OR (debo hacer que no cumpla ninguna sub rule para salir del step)
-        //Ante la primer subRule que este cumpliendo, tengo que resolver el error.
-        //Al final de cada action que tenga algun field involucrado en el rule del step, debo evaluar
-//        else if (currentRule instanceof OrRule) {
-//            List<Rule> currentRules = getCurrentSubRules(mCurrentAction.getFields(), currentRule);
-//
-//            for (Rule subRule : currentRules) {
-//                if (subRule.evaluate(paymentFlowState)) {
-//                    mCurrentAction.resolveUnfullfiledRule(subRule);
-//                    return false;
-//                }
-//            }
-//        } else if (currentRule instanceof NotRule){
-//            for (Field attribute :mCurrentAction.getFields()) {
-//                if (currentRule.getFieldName().equals(attribute.getName()) && !currentRule.evaluate(paymentFlowState)){
-//                    mCurrentAction.resolveUnfullfiledRule(((NotRule) currentRule).getRules().get(0));
-//                    return false;
-//                }
-//            }
-//        } else {
-//
-//        }
         mCurrentAction.fields.forEach {
             if(!validate(mCurrentAction, it))
                 return false
         }
+
         return true
     }
 
@@ -90,7 +36,7 @@ class FlowManager {
      * Se intstancia el flow correspondiente al tipo de operacion, inicializa el json
      * ActionMapper: es donde se crean las instancias de las actions con lo necesario para implementar en android
      */
-    fun startFlow(actionMapper: ActionMapper?, flow: Flow?, paymentFlowState: FlowState, actions: List<RuleAction>?) {
+    fun startFlow(actionMapper: ActionMapper, flow: Flow, paymentFlowState: FlowState, actions: List<RuleAction>) {
         this.actions = actions
             this.flow = flow
             this.actionMapper = actionMapper
@@ -105,31 +51,16 @@ class FlowManager {
      * @return
     </Field> */
     fun validate(currentAction: Action, field: Field): Boolean {
-//        val currentRule = getCurrentStep()!!.rule
-//            upadatePaymentFlowState(fields, paymentFlowState)
-//            val currentRules = getCurrentSubRules(fields, currentRule!!)
-//            for (subRule in currentRules) {
-//                if (subRule.evaluate(paymentFlowState)) {
-//                    mCurrentAction.resolveUnfullfiledRule(subRule)
-//                    return false
-//                }
-//            }
-        upadatePaymentFlowState(field, paymentFlowState)
+        val validations = flow!!.validations.filter { it -> it.field ==  field.getId() }
 
-            val validations = flow!!.validations.filter { it -> it.field ==  field.getId() }
-
-            validations.forEach {
-                if(!it.rule.evaluate(paymentFlowState)) {
-                    currentAction.resolveUnfullfiledRule(it)
-                    return false
-                }
+        validations.forEach {
+            if(!it.rule.evaluate(paymentFlowState)) {
+                currentAction.resolveUnfullfiledRule(it)
+                return false
             }
+        }
 
-
-
-
-
-           return true
+       return true
     }
 
     /**
@@ -139,12 +70,9 @@ class FlowManager {
      * @param mCurrentAction
      */
     fun next(mCurrentAction: Action) {
-        val currentRule = getCurrentStep()!!.rule
-
-
-            if (validateAll(mCurrentAction)) {
-                executeNext(mCurrentAction)
-            }
+        if (validateAll(mCurrentAction)) {
+            executeNext(mCurrentAction)
+        }
     }
 
 
@@ -233,9 +161,6 @@ class FlowManager {
         actionMapper!!.executeNextField(action, getCurrentStep()!!.requiredFields, getCurrentStep()!!.optionalFields)
     }
 
-    private fun upadatePaymentFlowState(field: Field, paymentFlowState: FlowState?) {
-        //TODO: implementar: tomar los valores de cada field y actualizarlos al paymentFlowState
-    }
 
     private fun getCurrentStep(): Step? {
         if (currentStep == null) {
@@ -261,9 +186,8 @@ class FlowManager {
 
 
     companion object {
-        //private Context context;
         @JvmStatic
-        var instance: FlowManager? = null
+        var i: FlowManager? = null
             get() {
                 if (field == null) {
                     field = FlowManager()

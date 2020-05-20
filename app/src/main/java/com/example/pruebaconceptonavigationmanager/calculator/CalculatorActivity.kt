@@ -1,6 +1,5 @@
 package com.example.pruebaconceptonavigationmanager.calculator
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import com.example.navigation.action.FlowManager
@@ -12,6 +11,7 @@ import com.example.pruebaconceptonavigationmanager.R
 import com.example.pruebaconceptonavigationmanager.actions.ActionAbstractActivity
 import com.example.pruebaconceptonavigationmanager.actions.ActionName
 import kotlinx.android.synthetic.main.activity_calculator.*
+import kotlinx.android.synthetic.main.activity_installments.*
 
 class CalculatorActivity : ActionAbstractActivity() {
 
@@ -61,8 +61,8 @@ class CalculatorActivity : ActionAbstractActivity() {
     }
 
     private fun confirmInputs(){
-        setFields(FieldName.AMOUNT, 23L)
-        FlowManager.instance!!.next(this)
+        setFields(FieldName.AMOUNT, textView.text)
+        FlowManager.i!!.next(this)
     }
 
 }
