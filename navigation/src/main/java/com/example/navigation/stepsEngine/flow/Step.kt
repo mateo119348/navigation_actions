@@ -3,10 +3,12 @@ package com.example.navigation.stepsEngine.flow
 import com.example.navigation.stepsEngine.enums.StepIdentifier
 import com.example.navigation.stepsEngine.field.Field
 import com.example.navigation.stepsEngine.flow.rules.base.Rule
+import com.example.navigation.stepsEngine.flow.rules.comparable.NullRule
+import com.example.navigation.stepsEngine.flow.rules.logic.OrRule
 import com.example.navigation.stepsEngine.payment.FlowState
 
 class Step {
-    var stepIdentifier: StepIdentifier? = null
+    lateinit var stepIdentifier: StepIdentifier
         private set
     var requiredFields: List<String>? = null
         private set
@@ -15,10 +17,12 @@ class Step {
     var rule: Rule? = null
         private set
         //TODO: terminar de implementar
-        get() { rule?:run {  rule =  generateNullRules()}
-            return rule}
+        get() { field?:run {
+            field =  generateNullRules()}
+            return field
+        }
 
-    fun mustExecute(flowState: FlowState?): Boolean {
+    fun mustExecute(flowState: FlowState): Boolean {
         return rule == null || rule!!.evaluate(flowState)
     }
 
@@ -39,17 +43,17 @@ class Step {
 
     //TODO: terminar de implementar
     private fun generateNullRules() : Rule?{
-        var retval : Rule? = null
+        var orRule = OrRule()
+        orRule.rules = ArrayList()
         if (requiredFields != null && requiredFields!!.isNotEmpty()) {
-            requiredFields?.forEach {
-                Field.getFlowStateField(it, false)?.run {
-                    //retval.add()
+            requiredFields?.forEach { it ->
+                Field.getFlowStateField(it)?.let { field ->
+                    orRule.rules.add(NullRule(field.getId()))
                 }
 
             }
         }
-
-        return retval;
+        return orRule;
     }
 
 }

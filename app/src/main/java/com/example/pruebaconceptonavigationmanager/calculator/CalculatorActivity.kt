@@ -5,13 +5,12 @@ import android.widget.Toast
 import com.example.navigation.action.FlowManager
 import com.example.navigation.stepsEngine.field.*
 import com.example.navigation.stepsEngine.flow.rules.actionValidation.ActionValidation
-import com.example.navigation.stepsEngine.flow.rules.actionValidation.ActionValidationsId
 import com.example.navigation.stepsEngine.payment.FlowState
 import com.example.pruebaconceptonavigationmanager.R
 import com.example.pruebaconceptonavigationmanager.actions.ActionAbstractActivity
 import com.example.pruebaconceptonavigationmanager.actions.ActionName
 import kotlinx.android.synthetic.main.activity_calculator.*
-import kotlinx.android.synthetic.main.activity_installments.*
+import java.math.BigDecimal
 
 class CalculatorActivity : ActionAbstractActivity() {
 
@@ -27,27 +26,19 @@ class CalculatorActivity : ActionAbstractActivity() {
     }
 
 
-    override fun getName(): String {
-        return ActionName.CALCULATOR
-    }
+    override val name: String
+        get() = ActionName.CALCULATOR
 
+    override var fields = ArrayList<Field>()
+        get()  {    field.add(AmountField())
+                    field.add(CartField())
+                    return field }
 
-
-    override fun getFields(): List<Field>? {
-        fields?: run {
-            fields = ArrayList()
-            fields!!.add(AmountField())
-            fields!!.add(CartField())
-            fields!!.add(DescriptionField())
-        }
-
-        return fields
-    }
 
     override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
         when(unfulfilledRule.id){
 
-            ActionValidationsId.AMOUNT_OUT_OF_RANGE -> {
+            ActionValidation.AMOUNT_OUT_OF_RANGE -> {
                 Toast.makeText(applicationContext, "El monto no esta en el rango", Toast.LENGTH_LONG).show()}
         }
 
@@ -61,7 +52,8 @@ class CalculatorActivity : ActionAbstractActivity() {
     }
 
     private fun confirmInputs(){
-        setFields(FieldName.AMOUNT, textView.text)
+        setFields(FieldName.AMOUNT, BigDecimal(txtAmount.text.toString()))
+        //FlowManager.i?.validate(this, FieldName.AMOUNT)
         FlowManager.i!!.next(this)
     }
 

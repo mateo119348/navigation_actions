@@ -1,6 +1,7 @@
 package com.example.pruebaconceptonavigationmanager
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.navigation.action.FlowManager
 import com.example.navigation.action.FlowManager.Companion.i
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             actionMapper = ActionMapperImpl(applicationContext)
             i!!.startFlow(actionMapper, flow, flowState!!, actions)
         } catch (ex: Exception) {
-            var i = 0
+            Log.e("Error", ex.message, ex.cause)
         }
     }
 }

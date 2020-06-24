@@ -12,5 +12,6 @@ interface RuleIdentifiers {
         const val STRING_CONTAINS = "STRING_CONTAINS"
         const val STRING_IS_CONTAINED = "STRING_IS_CONTAINED"
         const val STRING_IN_LIST = "STRING_IN_LIST"
+        const val STRING_LEES_THAN = "STRING_LEES_THAN"
     }
 }

@@ -28,7 +28,7 @@ class ActionMapperImpl(var context: Context) : ActionMapper {
      * @param action nodo que representa un action del json
      * @param params
      */
-    override fun executeAction(action: RuleAction, vararg params: Any) {
+    override fun executeAction(action: RuleAction, vararg params: Any?) {
         val name = action.id
         val deepLink = getDeepLink(name)
         initAction(deepLink!!, *params)
@@ -39,15 +39,15 @@ class ActionMapperImpl(var context: Context) : ActionMapper {
      * @param action  Action activa (pantalla)
      * @param params
      */
-    override fun executeNextField(action: Action, vararg params: Any) {
-        action.execute(params[0] as List<Field?>)
+    override fun executeNextField(action: Action, vararg params: Any?) {
+        action.execute(params[0] as List<Field>)
     }
 
     private fun getDeepLink(actionName: String?): String? {
         return deepLinks.actions!![actionName]
     }
 
-    private fun initAction(deepLink: String, vararg params: Any) {
+    private fun initAction(deepLink: String, vararg params: Any?) {
         val uri = Uri.parse(deepLink)
         val intent = getSafeIntent(context)
         intent!!.data = uri

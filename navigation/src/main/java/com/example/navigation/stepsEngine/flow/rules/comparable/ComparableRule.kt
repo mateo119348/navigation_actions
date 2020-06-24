@@ -5,11 +5,12 @@ import com.example.navigation.stepsEngine.field.Field.Companion.getFlowStateFiel
 import com.example.navigation.stepsEngine.flow.rules.base.Rule
 import com.example.navigation.stepsEngine.payment.FlowState
 import java.lang.reflect.Type
+import java.math.BigDecimal
 
 abstract class ComparableRule : Rule() {
 
-    var field: String? = null
-    var value: String? = null
+    open var field: String? = null
+    open lateinit var value: String
     var valueType: String? = null
     var isNot = false
     private var fieldValue : Field? = null
@@ -25,11 +26,11 @@ abstract class ComparableRule : Rule() {
         return getField()!!.get(flowState)
     }
 
-    val ruleClass: () -> Class<out Any>
-        get() = {
-            when(valueType){
+    val ruleClass: Class<out Any>
+        get()  {
+            return when(valueType){
                 ValueTypes.BOOL -> Boolean::class.java
-                ValueTypes.DECIMAL -> Double::class.java
+                ValueTypes.DECIMAL -> BigDecimal::class.java
                 ValueTypes.INT -> Int::class.java
                 else -> String::class.java
             }

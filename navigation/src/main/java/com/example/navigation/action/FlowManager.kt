@@ -1,13 +1,9 @@
 package com.example.navigation.action
 
-import com.example.navigation.stepsEngine.field.Field
+import android.util.Log
 import com.example.navigation.stepsEngine.flow.Flow
 import com.example.navigation.stepsEngine.flow.Step
-import com.example.navigation.stepsEngine.flow.rules.base.Rule
-import com.example.navigation.stepsEngine.flow.rules.comparable.ComparableRule
-import com.example.navigation.stepsEngine.flow.rules.logic.LogicRule
 import com.example.navigation.stepsEngine.payment.FlowState
-import kotlin.collections.ArrayList
 
 class FlowManager {
     lateinit var paymentFlowState: FlowState private set
@@ -22,7 +18,7 @@ class FlowManager {
 
     private fun validateAll(mCurrentAction: Action): Boolean {
         mCurrentAction.fields.forEach {
-            if(!validate(mCurrentAction, it))
+            if(!validate(mCurrentAction, it.getId()))
                 return false
         }
 
@@ -50,8 +46,8 @@ class FlowManager {
      * @param fields campos a validar
      * @return
     </Field> */
-    fun validate(currentAction: Action, field: Field): Boolean {
-        val validations = flow!!.validations.filter { it -> it.field ==  field.getId() }
+    fun validate(currentAction: Action, idField: String): Boolean {
+        val validations = flow!!.validations.filter { it -> it.field ==  idField }
 
         validations.forEach {
             if(!it.rule.evaluate(paymentFlowState)) {
@@ -70,8 +66,12 @@ class FlowManager {
      * @param mCurrentAction
      */
     fun next(mCurrentAction: Action) {
-        if (validateAll(mCurrentAction)) {
-            executeNext(mCurrentAction)
+        try {
+            if (validateAll(mCurrentAction)) {
+                executeNext(mCurrentAction)
+            }
+        } catch (ex : Exception){
+            Log.e("Error", ex.message, ex.cause)
         }
     }
 
@@ -106,7 +106,7 @@ class FlowManager {
         if (candidates!!.isEmpty()) {
             candidates  = actions?.filter { action ->
                 currentStep?.requiredFields?.forEach{
-                    if (action?.fields!!.containsKey(it)) {
+                    if (action?.fields!!.contains(it)) {
                         return@filter true
                     }
                 }
@@ -117,6 +117,8 @@ class FlowManager {
                 toString().contains(currentStep?.optionalFieldsToString()!!)
             }
         }
+
+        require(candidates!!.isNotEmpty()) { String.format("the %s step has no any action associated. Check steps and actions", getCurrentStep()?.stepIdentifier?.name) }
 
 
         return candidates!!
@@ -153,7 +155,7 @@ class FlowManager {
         currentActionIndex = 0
     }
 
-    private fun executeAction(action: RuleAction?) {
+    private fun executeAction(action: RuleAction) {
         actionMapper!!.executeAction(action, getCurrentStep()!!.requiredFields, getCurrentStep()!!.optionalFields)
     }
 
@@ -176,11 +178,11 @@ class FlowManager {
         return currentActions
     }
 
-    private fun getCurrentAction(): RuleAction? {
+    private fun getCurrentAction(): RuleAction {
         if (currentAction == null) {
             currentAction = getCurrentActions()!![currentActionIndex]
         }
-        return currentAction
+        return currentAction!!
     }
 
 

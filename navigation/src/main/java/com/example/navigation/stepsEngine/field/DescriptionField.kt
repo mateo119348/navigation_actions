@@ -8,7 +8,7 @@ class DescriptionField : Field() {
         return FieldName.DESCRIPTION
     }
 
-    override fun get(flowState: FlowState): Any {
+    override fun get(flowState: FlowState): String? {
         return flowState.description
     }
 

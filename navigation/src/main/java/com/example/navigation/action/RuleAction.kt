@@ -4,10 +4,10 @@ import android.util.ArrayMap
 
 class RuleAction {
     var id: String? = null
-    var fields: ArrayMap<String, Object>? = null
+    var fields: ArrayList<String>? = null
 
 
     override fun toString(): String {
-        return fields!!.keys.sorted().joinToString()
+        return fields!!.sorted().joinToString()
     }
 }

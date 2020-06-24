@@ -20,17 +20,23 @@
               }
             ]
         }
-  }
+    },
+    {
+      "id": "DESCRIPTION_TOO_LARGE",
+      "field": "DESCRIPTION",
+      "rule":
+      {
+        "type": "STRING_LEES_THAN",
+        "field": "DESCRIPTION",
+        "count": 30
+      }
+    }
   ],
   "steps": [
     {
       "step_identifier": "AMOUNT",
       "required_fields": ["AMOUNT", "DESCRIPTION"],
-      "optional_fields": ["CART"],
-      "rule": {
-        "type": "NULL",
-        "field": "AMOUNT"
-      }
+      "optional_fields": ["CART"]
     },
     {
       "step_identifier": "RESERVATION",
@@ -43,7 +49,7 @@
             "type": "EQUALS",
             "field": "IS_RESERVATION",
             "value_type": "bool",
-            "value": true
+            "value": false
           },
           {
             "type": "NULL",

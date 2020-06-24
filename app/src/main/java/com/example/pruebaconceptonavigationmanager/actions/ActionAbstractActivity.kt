@@ -6,23 +6,22 @@ import com.example.navigation.action.Action
 import com.example.navigation.action.FlowManager
 import com.example.navigation.stepsEngine.field.Field
 
-abstract class ActionAbstractActivity : AppCompatActivity(), Action {
+abstract class ActionAbstractActivity() : AppCompatActivity(), Action {
 
-    protected var fields : ArrayList<Field>? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun setFields(idField: String, value: Any) {
+    override fun setFields(idField: String, value: Any?) {
         val flowState = FlowManager.i?.paymentFlowState
 
-        var field = getFields()!!.first {  it.getId() == idField }
+        var field = getField(idField)
 
         field.set(flowState!!, value)
     }
 
-    override fun execute(newFields: MutableList<Field>?) {
+    private fun getField(idField : String) : Field {
+        return fields.first {  it.getId() == idField}
+    }
+
+    override fun execute(newFields: List<Field>) {
         TODO("Not yet implemented")
     }
 }

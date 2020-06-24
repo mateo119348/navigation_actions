@@ -3,14 +3,18 @@ package com.example.pruebaconceptonavigationmanager.installments
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.navigation.action.Action
+import com.example.navigation.stepsEngine.field.AmountField
+import com.example.navigation.stepsEngine.field.CartField
 import com.example.navigation.stepsEngine.field.Field
+import com.example.navigation.stepsEngine.field.InstallmentsField
 import com.example.navigation.stepsEngine.flow.rules.actionValidation.ActionValidation
 import com.example.navigation.stepsEngine.payment.FlowState
 import com.example.pruebaconceptonavigationmanager.R
+import com.example.pruebaconceptonavigationmanager.actions.ActionAbstractActivity
+import com.example.pruebaconceptonavigationmanager.actions.ActionName
 import java.util.*
 
-class InstallmentsActivity : AppCompatActivity(), Action {
-    private  var fields: List<Field>? = null
+class InstallmentsActivity :  ActionAbstractActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,30 +22,24 @@ class InstallmentsActivity : AppCompatActivity(), Action {
         setContentView(R.layout.activity_installments)
     }
 
-    override fun getName(): String {
-        return "CALCULATOR"
-    }
+    override val name: String
+        get() = ActionName.INSTALLMENTS
 
-    override fun getFields(): List<Field>? {
-        if (fields == null) {
-            fields = ArrayList()
-        }
-        return fields
-    }
+    override var fields = ArrayList<Field>()
+        get()  {    field.add(InstallmentsField())
+                    return field }
 
-    override fun backStepState(fields: MutableList<Field>?, paymentFlowState: FlowState?) {
+
+    override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
         TODO("Not yet implemented")
     }
 
-    override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation?) {
+    override fun backStepState(fields: List<Field>, paymentFlowState: FlowState) {
         TODO("Not yet implemented")
     }
 
-    override fun setFields(idField: String?, value: Any?) {
-        TODO("Not yet implemented")
-    }
 
-    override fun execute(newFields: MutableList<Field>?) {
+    override fun execute(newFields: List<Field>) {
         TODO("Not yet implemented")
     }
 

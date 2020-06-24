@@ -15,7 +15,7 @@ class AmountField : Field() {
     }
 
     override fun set(flowState: FlowState, value: Any?) {
-        flowState.amount = value as Long?
+        flowState.amount = value as BigDecimal
     }
 
 }
