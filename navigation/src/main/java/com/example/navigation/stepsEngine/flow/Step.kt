@@ -3,6 +3,7 @@ package com.example.navigation.stepsEngine.flow
 import com.example.navigation.stepsEngine.enums.StepIdentifier
 import com.example.navigation.stepsEngine.field.Field
 import com.example.navigation.stepsEngine.flow.rules.base.Rule
+import com.example.navigation.stepsEngine.flow.rules.base.RuleIdentifiers
 import com.example.navigation.stepsEngine.flow.rules.comparable.NullRule
 import com.example.navigation.stepsEngine.flow.rules.logic.OrRule
 import com.example.navigation.stepsEngine.payment.FlowState
@@ -53,7 +54,12 @@ class Step {
 
             }
         }
-        return orRule;
+
+        return when(orRule.rules.size){
+            1 -> orRule.rules[0]
+            0 -> throw IllegalArgumentException (String.format(" The %s step must have at least one required field or rule", stepIdentifier.name) )
+            else -> orRule
+        }
     }
 
 }

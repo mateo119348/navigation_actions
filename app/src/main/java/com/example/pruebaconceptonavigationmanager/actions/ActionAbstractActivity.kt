@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.example.navigation.action.Action
 import com.example.navigation.action.FlowManager
 import com.example.navigation.stepsEngine.field.Field
+import com.example.navigation.stepsEngine.payment.FlowState
 
 abstract class ActionAbstractActivity() : AppCompatActivity(), Action {
 
@@ -23,5 +24,14 @@ abstract class ActionAbstractActivity() : AppCompatActivity(), Action {
 
     override fun execute(newFields: List<Field>) {
         TODO("Not yet implemented")
+    }
+
+    override fun backStepState() {
+        FlowManager.i?.back(fields)
+    }
+
+    override fun onBackPressed() {
+        backStepState()
+        super.onBackPressed()
     }
 }

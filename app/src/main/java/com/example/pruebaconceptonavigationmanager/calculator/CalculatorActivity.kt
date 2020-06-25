@@ -47,9 +47,6 @@ class CalculatorActivity : ActionAbstractActivity() {
 
 
 
-    override fun backStepState(fields: List<Field>, paymentFlowState: FlowState) {
-
-    }
 
     private fun confirmInputs(){
         setFields(FieldName.AMOUNT, BigDecimal(txtAmount.text.toString()))

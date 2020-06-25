@@ -26,19 +26,4 @@ abstract class ComparableRule : Rule() {
         return getField()!!.get(flowState)
     }
 
-    val ruleClass: Class<out Any>
-        get()  {
-            return when(valueType){
-                ValueTypes.BOOL -> Boolean::class.java
-                ValueTypes.DECIMAL -> BigDecimal::class.java
-                ValueTypes.INT -> Int::class.java
-                else -> String::class.java
-            }
-        }
-
-//            if (valueType == "bool") Boolean::class.java
-//        else if (valueType == "string") String::class.java
-//        else if (valueType == "decimal") Double::class.java
-//        else if (valueType == "int") Int::class.java
-//        else throw IllegalStateException(String.format("Error in value_type. Check your json!!!"))
 }

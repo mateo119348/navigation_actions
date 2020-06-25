@@ -25,8 +25,6 @@ interface Action {
 
     /**
      * AL hacer back sobre una pantalla, aqui se deben resetear los campos afectados en esta action
-     * @param fields
-     * @param paymentFlowState
      */
-    fun backStepState(fields: List<Field>, paymentFlowState: FlowState)
+    fun backStepState()
 }

@@ -1,10 +1,11 @@
 package com.example.navigation.stepsEngine.field
 
+import com.example.navigation.stepsEngine.enums.CardType
 import com.example.navigation.stepsEngine.payment.FlowState
 
 class CardTypeField : Field() {
     override operator fun get(flowState: FlowState): String? {
-        val type = flowState.card.type
+        val type = flowState.card.cardType
         return type?.name
     }
 
@@ -12,5 +13,7 @@ class CardTypeField : Field() {
         return FieldName.CARD_TYPE
     }
 
-    override operator fun set(flowState: FlowState, value: Any?) {}
+    override operator fun set(flowState: FlowState, value: Any?) {
+        flowState.card.cardType = value as CardType
+    }
 }

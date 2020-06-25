@@ -7,16 +7,23 @@ import java.util.*
 
 class Flow {
     lateinit var operationType: OperationType
-    lateinit var steps: LinkedList<Step>
+    lateinit var steps: List<Step>
     lateinit var validations: List<ActionValidation>
 
-    //TODO: Ver bien como ir para atrás, esto así YA ANDA, pero puede quedar mejor...
     fun getNext(flowState: FlowState): Step {
-        var step = steps.poll()
-        while (step != null && !step.mustExecute(flowState)) {
-            step = steps.poll()
+
+        var step: Step? = null
+        run loop@{
+        steps.forEach {
+            if (it.mustExecute(flowState)) {
+                step = it
+                return@loop
+                }
+            }
         }
+        //step = steps.takeWhile { it.mustExecute(flowState)}.first()
+
         checkNotNull(step) { "You shouldn't be here... Check your code!!!" }
-        return step
+        return step!!
     }
 }

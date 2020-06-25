@@ -2,7 +2,7 @@ package com.example.navigation.stepsEngine.payment.card
 
 import com.example.navigation.stepsEngine.enums.PinType
 import com.example.navigation.stepsEngine.enums.Tag
-import com.example.navigation.stepsEngine.enums.Type
+import com.example.navigation.stepsEngine.enums.CardType
 
 class Card {
     var encryptedTrack1: String? = null
@@ -18,7 +18,7 @@ class Card {
     var panSequenceNumber: String? = null
     var isMustCollectSignatureEMV = false
     var tag: Tag? = null
-    var type: Type? = null
+    var cardType: CardType? = null
     var cardTokenId: String? = null
     var issuer: Long? = null
     var firstSixDigits: String? = null

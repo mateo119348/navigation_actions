@@ -45,7 +45,5 @@ class DescriptionActivity : ActionAbstractActivity() {
 
     }
 
-    override fun backStepState(fields: List<Field>, paymentFlowState: FlowState) {
-        TODO("Not yet implemented")
-    }
+
 }

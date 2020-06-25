@@ -1,6 +1,7 @@
 package com.example.navigation.action
 
 import android.util.Log
+import com.example.navigation.stepsEngine.field.Field
 import com.example.navigation.stepsEngine.flow.Flow
 import com.example.navigation.stepsEngine.flow.Step
 import com.example.navigation.stepsEngine.payment.FlowState
@@ -75,6 +76,12 @@ class FlowManager {
         }
     }
 
+    fun back(fields : List<Field>){
+        fields.forEach {
+            it.set(paymentFlowState, null)
+        }
+    }
+
 
     /**
      * Se busca el mejor listado de acciones que satisfagan el step actual. Debemos tener en cuenta las siguientes precondiciones:
@@ -135,7 +142,7 @@ class FlowManager {
         } else if (!getCurrentStep()!!.mustExecute(paymentFlowState)) {
             executeNextStep(mCurrentAction)
         } else {
-            throw IllegalStateException("Revisar las rules, se tendrian que haber cumplido las validaciones")
+            throw IllegalStateException("Revisar las rules y validations de salida, se tendrian que haber cumplido las validaciones")
         }
     }
 
@@ -184,6 +191,8 @@ class FlowManager {
         }
         return currentAction!!
     }
+
+
 
 
 

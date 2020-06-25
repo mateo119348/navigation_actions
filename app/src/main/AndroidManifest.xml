@@ -17,7 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".posSelector.PosSelectorActivity">
+        <activity android:label="PosSelector" android:name=".posSelector.PosSelectorActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -29,7 +29,7 @@
                     android:scheme="mercadopago" />
             </intent-filter>
         </activity>
-        <activity android:name=".chooser.ChooserActivity">
+        <activity android:label="Chooser" android:name=".chooser.ChooserActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -41,7 +41,7 @@
                     android:scheme="mercadopago" />
             </intent-filter>
         </activity>
-        <activity android:name=".description.DescriptionActivity">
+        <activity android:label="Descripcion" android:name=".description.DescriptionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -53,7 +53,7 @@
                     android:scheme="mercadopago" />
             </intent-filter>
         </activity>
-        <activity android:name=".installments.InstallmentsActivity">
+        <activity android:label="Installments" android:name=".installments.InstallmentsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -65,7 +65,7 @@
                     android:scheme="mercadopago" />
             </intent-filter>
         </activity>
-        <activity android:name=".calculator.CalculatorActivity">
+        <activity android:label="Monto/Calculadora" android:name=".calculator.CalculatorActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

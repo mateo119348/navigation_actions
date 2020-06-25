@@ -23,7 +23,5 @@ class PosSelectorActivity : ActionAbstractActivity() {
         TODO("Not yet implemented")
     }
 
-    override fun backStepState(fields: List<Field>, paymentFlowState: FlowState) {
-        TODO("Not yet implemented")
-    }
+
 }
