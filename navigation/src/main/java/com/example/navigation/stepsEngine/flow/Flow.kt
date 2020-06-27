@@ -9,7 +9,6 @@ class Flow {
     lateinit var operationType: OperationType
     lateinit var steps: List<Step>
     lateinit var validations: List<ActionValidation>
-    lateinit var lastStepExecuted: Step
 
     fun getNext(flowState: FlowState): Step {
 

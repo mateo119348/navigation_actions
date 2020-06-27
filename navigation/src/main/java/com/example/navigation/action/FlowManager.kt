@@ -14,8 +14,6 @@ class FlowManager {
     private var currentStep: Step? = null
     private var actions: List<RuleAction>? = null
 
-    //private var currentActionIndex = 0
-
 
     private fun validateAll(mCurrentAction: Action): Boolean {
         mCurrentAction.fields.forEach {
@@ -156,10 +154,6 @@ class FlowManager {
     }
 
     private fun executeNextStep(mCurrentAction: Action?) {
-        if (currentStep != null){
-            flow.lastStepExecuted = currentStep!!
-        }
-
         currentStep = flow!!.getNext(paymentFlowState)
         currentStep!!.actions = getStepActions(currentStep!!)
         currentAction = currentStep!!.getNextAction(null)
