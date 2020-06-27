@@ -14,6 +14,6 @@ class CardTypeField : Field() {
     }
 
     override operator fun set(flowState: FlowState, value: Any?) {
-        flowState.card.cardType = value as CardType
+        flowState.card.cardType = value as CardType?
     }
 }

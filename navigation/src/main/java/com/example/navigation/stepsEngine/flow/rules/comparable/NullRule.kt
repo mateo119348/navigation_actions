@@ -8,6 +8,9 @@ class NullRule() : ComparableRule() {
        field = mField
     }
     override fun evaluate(flowState: FlowState): Boolean {
-        return getValue(flowState) == null
+        return if (isNot)
+            getValue(flowState) != null
+        else
+            getValue(flowState) == null
     }
 }

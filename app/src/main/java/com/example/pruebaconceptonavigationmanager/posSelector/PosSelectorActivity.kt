@@ -6,6 +6,7 @@ import com.example.navigation.stepsEngine.flow.rules.actionValidation.ActionVali
 import com.example.navigation.stepsEngine.payment.FlowState
 import com.example.pruebaconceptonavigationmanager.R
 import com.example.pruebaconceptonavigationmanager.actions.ActionAbstractActivity
+import com.example.pruebaconceptonavigationmanager.actions.ActionName
 
 class PosSelectorActivity : ActionAbstractActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,13 +15,13 @@ class PosSelectorActivity : ActionAbstractActivity() {
     }
 
     override val name: String
-        get() = TODO("Not yet implemented")
+        get() = ActionName.POS_SELECTOR
     override var fields =  ArrayList<Field>()
         get () {return field}
 
 
     override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
-        TODO("Not yet implemented")
+
     }
 
 

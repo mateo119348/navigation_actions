@@ -4,7 +4,7 @@ import com.example.navigation.stepsEngine.flow.rules.base.Rule
 import com.example.navigation.stepsEngine.payment.FlowState
 
 class ActionValidation {
-    lateinit var id: String
+    lateinit var id: Codes
         private set
     lateinit var field: String
         private set
@@ -15,10 +15,8 @@ class ActionValidation {
         return rule.evaluate(paymentFlowState)
     }
 
-    companion object {
-        const val AMOUNT_OUT_OF_RANGE = "AMOUNT_OUT_OF_RANGE"
-        const val DESCRIPTION_TOO_LARGE = "DESCRIPTION_TOO_LARGE"
-
+    enum class Codes {
+        AMOUNT_OUT_OF_RANGE, DESCRIPTION_TOO_LARGE, CARD_TYPE_IS_NULL
     }
 
 }

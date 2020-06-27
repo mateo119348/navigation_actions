@@ -10,24 +10,24 @@ class FlowManager {
     lateinit var paymentFlowState: FlowState private set
     private lateinit var actionMapper: ActionMapper
     private lateinit var flow: Flow
-    private var currentActions: List<RuleAction>? = null
     private var currentAction: RuleAction? = null
     private var currentStep: Step? = null
     private var actions: List<RuleAction>? = null
-    private var currentActionIndex = 0
+
+    //private var currentActionIndex = 0
 
 
     private fun validateAll(mCurrentAction: Action): Boolean {
         mCurrentAction.fields.forEach {
-            if(!validate(mCurrentAction, it.getId()))
+            if (!validate(mCurrentAction, it.getId()))
                 return false
         }
 
         return true
     }
 
-    private val isLastAction: Boolean
-        private get() = currentActionIndex == getCurrentActions()!!.size - 1
+//    private val isLastAction: Boolean
+//        private get() = currentActionIndex == getCurrentStep()!!.actions!!.size - 1
 
     /**
      * Se intstancia el flow correspondiente al tipo de operacion, inicializa el json
@@ -35,10 +35,10 @@ class FlowManager {
      */
     fun startFlow(actionMapper: ActionMapper, flow: Flow, paymentFlowState: FlowState, actions: List<RuleAction>) {
         this.actions = actions
-            this.flow = flow
-            this.actionMapper = actionMapper
-            this.paymentFlowState = paymentFlowState
-            executeNextStep(null)
+        this.flow = flow
+        this.actionMapper = actionMapper
+        this.paymentFlowState = paymentFlowState
+        executeNextStep(null)
     }
 
     /**
@@ -48,16 +48,16 @@ class FlowManager {
      * @return
     </Field> */
     fun validate(currentAction: Action, idField: String): Boolean {
-        val validations = flow!!.validations.filter { it -> it.field ==  idField }
+        val validations = flow!!.validations.filter { it -> it.field == idField }
 
         validations.forEach {
-            if(!it.rule.evaluate(paymentFlowState)) {
+            if (!it.rule.evaluate(paymentFlowState)) {
                 currentAction.resolveUnfullfiledRule(it)
                 return false
             }
         }
 
-       return true
+        return true
     }
 
     /**
@@ -71,14 +71,22 @@ class FlowManager {
             if (validateAll(mCurrentAction)) {
                 executeNext(mCurrentAction)
             }
-        } catch (ex : Exception){
+        } catch (ex: Exception) {
             Log.e("Error", ex.message, ex.cause)
         }
     }
 
-    fun back(fields : List<Field>){
+    fun back(fields: List<Field>) {
         fields.forEach {
             it.set(paymentFlowState, null)
+        }
+        val previousAction = getCurrentStep()!!.previousAction(currentAction)
+        if (previousAction == null) {
+            currentStep = flow.getPreviousStep(currentStep!!)
+            currentAction = currentStep!!.getLastAction()
+
+        } else {
+            currentAction = previousAction
         }
     }
 
@@ -103,25 +111,25 @@ class FlowManager {
     private fun getStepActions(step: Step): List<RuleAction> {
 
 
-        var candidates : List<RuleAction>?
+        var candidates: List<RuleAction>?
 
         candidates = actions?.filter {
-            toString().contains(currentStep?.requiredFieldsToString()!!)
+            toString().contains(step.requiredFieldsToString()!!)
         }
 
 
         if (candidates!!.isEmpty()) {
-            candidates  = actions?.filter { action ->
-                currentStep?.requiredFields?.forEach{
+            candidates = actions?.filter { action ->
+                step.requiredFields?.forEach {
                     if (action?.fields!!.contains(it)) {
                         return@filter true
                     }
                 }
                 false
             }
-        } else if (candidates!!.size > 1){
+        } else if (candidates!!.size > 1) {
             candidates = candidates?.filter {
-                toString().contains(currentStep?.optionalFieldsToString()!!)
+                toString().contains(step.optionalFieldsToString()!!)
             }
         }
 
@@ -130,15 +138,16 @@ class FlowManager {
 
         return candidates!!
     }
+
     /**
      * Chequea si existe una proxima Action dentro de las acciones del Step actual
      * Si no es asi, se evalua la rule del step (se deberia cumplir )
      */
     private fun executeNext(mCurrentAction: Action) {
-        if (!isLastAction) {
-            currentActionIndex++
-            currentAction = null
-            executeAction(getCurrentAction())
+
+        if (getCurrentStep()!!.getNextAction(currentAction) != null) {
+            currentAction = getCurrentStep()!!.getNextAction(currentAction)
+            executeAction(currentAction!!)
         } else if (!getCurrentStep()!!.mustExecute(paymentFlowState)) {
             executeNextStep(mCurrentAction)
         } else {
@@ -147,19 +156,25 @@ class FlowManager {
     }
 
     private fun executeNextStep(mCurrentAction: Action?) {
-        initStep()
-        if (mCurrentAction != null && getCurrentAction()!!.id == mCurrentAction.name) {
+        if (currentStep != null){
+            flow.lastStepExecuted = currentStep!!
+        }
+
+        currentStep = flow!!.getNext(paymentFlowState)
+        currentStep!!.actions = getStepActions(currentStep!!)
+        currentAction = currentStep!!.getNextAction(null)
+
+        if (mCurrentAction != null && currentAction!!.id == mCurrentAction.name) {
             executeNextField(mCurrentAction)
         } else {
-            executeAction(getCurrentAction())
+            executeAction(currentAction!!)
         }
     }
 
     private fun initStep() {
-        currentStep = null
-        currentActions = null
-        currentAction = null
-        currentActionIndex = 0
+        currentStep = flow!!.getNext(paymentFlowState)
+        currentStep!!.actions = getStepActions(currentStep!!)
+        currentAction = currentStep!!.getNextAction(null)
     }
 
     private fun executeAction(action: RuleAction) {
@@ -172,24 +187,12 @@ class FlowManager {
 
 
     private fun getCurrentStep(): Step? {
-        if (currentStep == null) {
-            currentStep = flow!!.getNext(paymentFlowState)
-        }
+//        if (currentStep == null) {
+//            currentStep = flow!!.getNext(paymentFlowState)
+//            currentStep!!.actions = getStepActions(currentStep!!)
+//            currentAction = currentStep!!.getNextAction(null)
+//        }
         return currentStep
-    }
-
-    private fun getCurrentActions(): List<RuleAction>? {
-        if (currentActions == null) {
-            currentActions = getStepActions(getCurrentStep()!!)
-        }
-        return currentActions
-    }
-
-    private fun getCurrentAction(): RuleAction {
-        if (currentAction == null) {
-            currentAction = getCurrentActions()!![currentActionIndex]
-        }
-        return currentAction!!
     }
 
 

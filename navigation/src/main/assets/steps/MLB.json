@@ -30,6 +30,16 @@
         "field": "DESCRIPTION",
         "count": 30
       }
+    },
+    {
+      "id": "CARD_TYPE_IS_NULL",
+      "field": "CARD_TYPE",
+      "rule":
+      {
+        "type": "NULL",
+        "field": "CARD_TYPE",
+        "not": true
+      }
     }
   ],
   "steps": [

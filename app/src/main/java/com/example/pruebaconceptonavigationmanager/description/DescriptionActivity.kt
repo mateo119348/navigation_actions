@@ -33,14 +33,19 @@ class DescriptionActivity : ActionAbstractActivity() {
     override val name: String
         get() = ActionName.DESCRIPTION
     override var fields = ArrayList<Field>()
-        get()  {field.add(DescriptionField())
-                return field}
+        get() {
+            if (field.isEmpty()) {
+                field.add(DescriptionField())
+            }
+            return field
+        }
 
 
     override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
-        when(unfulfilledRule.id){
-            ActionValidation.DESCRIPTION_TOO_LARGE -> {
-                Toast.makeText(applicationContext, "Descripcion demasiado larga", Toast.LENGTH_LONG).show()}
+        when (unfulfilledRule.id) {
+            ActionValidation.Codes.DESCRIPTION_TOO_LARGE -> {
+                Toast.makeText(applicationContext, "Descripcion demasiado larga", Toast.LENGTH_LONG).show()
+            }
         }
 
     }

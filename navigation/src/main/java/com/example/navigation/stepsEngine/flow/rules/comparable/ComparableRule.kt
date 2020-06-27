@@ -13,16 +13,16 @@ abstract class ComparableRule : Rule() {
     open lateinit var value: String
     var valueType: String? = null
     var isNot = false
-    private var fieldValue : Field? = null
+    private var fieldValue: Field? = null
 
 
-    private fun getField() : Field? {
+    private fun getField(): Field? {
         if (fieldValue == null)
             fieldValue = getFlowStateField(field!!)!!
         return fieldValue;
     }
 
-    fun getValue(flowState : FlowState) : Any?{
+    fun getValue(flowState: FlowState): Any? {
         return getField()!!.get(flowState)
     }
 

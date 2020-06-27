@@ -14,7 +14,7 @@ import com.example.pruebaconceptonavigationmanager.actions.ActionAbstractActivit
 import com.example.pruebaconceptonavigationmanager.actions.ActionName
 import java.util.*
 
-class InstallmentsActivity :  ActionAbstractActivity() {
+class InstallmentsActivity : ActionAbstractActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,15 +26,17 @@ class InstallmentsActivity :  ActionAbstractActivity() {
         get() = ActionName.INSTALLMENTS
 
     override var fields = ArrayList<Field>()
-        get()  {    field.add(InstallmentsField())
-                    return field }
+        get() {
+            if (field.isEmpty()) {
+                field.add(InstallmentsField())
+            }
+            return field
+        }
 
 
     override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
         TODO("Not yet implemented")
     }
-
-
 
 
     override fun execute(newFields: List<Field>) {

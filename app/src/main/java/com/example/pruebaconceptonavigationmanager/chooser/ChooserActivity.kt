@@ -1,11 +1,11 @@
 package com.example.pruebaconceptonavigationmanager.chooser
 
 import android.os.Bundle
+import android.widget.Toast
 import com.example.navigation.action.FlowManager
 import com.example.navigation.stepsEngine.enums.CardType
 import com.example.navigation.stepsEngine.field.*
 import com.example.navigation.stepsEngine.flow.rules.actionValidation.ActionValidation
-import com.example.navigation.stepsEngine.payment.FlowState
 import com.example.pruebaconceptonavigationmanager.R
 import com.example.pruebaconceptonavigationmanager.actions.ActionAbstractActivity
 import com.example.pruebaconceptonavigationmanager.actions.ActionName
@@ -32,11 +32,22 @@ class ChooserActivity : ActionAbstractActivity() {
         get() = ActionName.CHOOSER
 
     override var fields = ArrayList<Field>()
-        get()  {    field.add(CardTypeField())
-                    return field }
+        get() {
+            if (field.isEmpty()) {
+                field.add(CardTypeField())
+            }
+            return field
+        }
 
 
-    override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {}
+    override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
+        when (unfulfilledRule.id) {
+            ActionValidation.Codes.CARD_TYPE_IS_NULL -> {
+                Toast.makeText(applicationContext, "No se ha seleccionado tipo de tarjeta", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
     override fun execute(newFields: List<Field>) {}
 
 

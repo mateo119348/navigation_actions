@@ -15,7 +15,6 @@ import java.math.BigDecimal
 class CalculatorActivity : ActionAbstractActivity() {
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calculator)
@@ -30,25 +29,28 @@ class CalculatorActivity : ActionAbstractActivity() {
         get() = ActionName.CALCULATOR
 
     override var fields = ArrayList<Field>()
-        get()  {    field.add(AmountField())
-                    field.add(CartField())
-                    return field }
+        get() {
+            if (field.isEmpty()) {
+                field.add(AmountField())
+                field.add(CartField())
+            }
+            return field
+        }
 
 
     override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
-        when(unfulfilledRule.id){
+        when (unfulfilledRule.id) {
 
-            ActionValidation.AMOUNT_OUT_OF_RANGE -> {
-                Toast.makeText(applicationContext, "El monto no esta en el rango", Toast.LENGTH_LONG).show()}
+            ActionValidation.Codes.AMOUNT_OUT_OF_RANGE -> {
+                Toast.makeText(applicationContext, "El monto no esta en el rango", Toast.LENGTH_LONG).show()
+            }
         }
 
 
     }
 
 
-
-
-    private fun confirmInputs(){
+    private fun confirmInputs() {
         setFields(FieldName.AMOUNT, BigDecimal(txtAmount.text.toString()))
         //FlowManager.i?.validate(this, FieldName.AMOUNT)
         FlowManager.i!!.next(this)
