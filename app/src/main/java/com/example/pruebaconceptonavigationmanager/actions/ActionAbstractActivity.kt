@@ -27,7 +27,7 @@ abstract class ActionAbstractActivity() : AppCompatActivity(), Action {
     }
 
     override fun backStepState() {
-        FlowManager.i?.back(fields)
+        FlowManager.i?.back(this)
     }
 
     override fun onBackPressed() {
