@@ -17,27 +17,41 @@ class ChooserActivity : ActionAbstractActivity() {
         setContentView(R.layout.activity_chooser)
 
         btnCreditCard.setOnClickListener { selectCreditCard() }
-        btnContinue.setOnClickListener { continuePaymenty() }
+        btnDebitCard.setOnClickListener { selectDebitCard() }
+        btnVoucher.setOnClickListener { selectVoucherCard() }
+        btnQR.setOnClickListener { selectQR() }
     }
 
-    private fun continuePaymenty() {
+    private fun continuePayment() {
         FlowManager.i!!.next(this)
     }
 
     private fun selectCreditCard() {
-        setFields(FieldName.CARD_TYPE, CardType.CREDIT_CARD)
+        setTypeCard(CardType.CREDIT_CARD)
+        continuePayment()
+    }
+
+    private fun selectDebitCard() {
+        setTypeCard(CardType.DEBIT_CARD)
+        continuePayment()
+    }
+
+    private fun selectVoucherCard() {
+        setTypeCard(CardType.VOUCHER_CARD)
+        continuePayment()
+    }
+
+    private fun selectQR() {
+        setTypeCard(CardType.QR)
+        continuePayment()
+    }
+
+    fun setTypeCard(cardType: CardType) {
+        setField(FieldName.CARD_TYPE, cardType)
     }
 
     override val name: String
         get() = ActionName.CHOOSER
-
-    override var fields = ArrayList<Field>()
-        get() {
-            if (field.isEmpty()) {
-                field.add(CardTypeField())
-            }
-            return field
-        }
 
 
     override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
@@ -48,7 +62,7 @@ class ChooserActivity : ActionAbstractActivity() {
         }
     }
 
-    override fun execute(newFields: List<Field>) {}
+    override fun executeFields(newFields: List<Field>) {}
 
 
 }

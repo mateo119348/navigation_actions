@@ -5,20 +5,29 @@ import android.widget.Toast
 import com.example.navigation.action.FlowManager
 import com.example.navigation.stepsEngine.field.*
 import com.example.navigation.stepsEngine.flow.rules.actionValidation.ActionValidation
-import com.example.navigation.stepsEngine.payment.FlowState
 import com.example.pruebaconceptonavigationmanager.R
 import com.example.pruebaconceptonavigationmanager.actions.ActionAbstractActivity
 import com.example.pruebaconceptonavigationmanager.actions.ActionName
 import kotlinx.android.synthetic.main.activity_calculator.*
 import java.math.BigDecimal
 
-class CalculatorActivity : ActionAbstractActivity() {
+open class CalculatorActivity : ActionAbstractActivity() {
 
+
+    open var presenter = CalculatorPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_calculator)
+        setContentView(getLayoutResource())
+        setup()
 
+    }
+
+    protected open fun getLayoutResource(): Int {
+        return R.layout.activity_calculator
+    }
+
+    private fun setup() {
         button.setOnClickListener {
             confirmInputs()
         }
@@ -28,14 +37,7 @@ class CalculatorActivity : ActionAbstractActivity() {
     override val name: String
         get() = ActionName.CALCULATOR
 
-    override var fields = ArrayList<Field>()
-        get() {
-            if (field.isEmpty()) {
-                field.add(AmountField())
-                field.add(CartField())
-            }
-            return field
-        }
+
 
 
     override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
@@ -50,9 +52,8 @@ class CalculatorActivity : ActionAbstractActivity() {
     }
 
 
-    private fun confirmInputs() {
-        setFields(FieldName.AMOUNT, BigDecimal(txtAmount.text.toString()))
-        //FlowManager.i?.validate(this, FieldName.AMOUNT)
+    protected open fun confirmInputs() {
+        setField(FieldName.AMOUNT, BigDecimal(txtAmount.text.toString()))
         FlowManager.i!!.next(this)
     }
 

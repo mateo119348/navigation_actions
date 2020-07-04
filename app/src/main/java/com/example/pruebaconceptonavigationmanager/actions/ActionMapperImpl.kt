@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import com.example.navigation.action.Action
 import com.example.navigation.action.ActionMapper
+import com.example.navigation.action.BUNDLE_FIELDS
 import com.example.navigation.action.RuleAction
 import com.example.navigation.stepsEngine.field.Field
 import com.fasterxml.jackson.core.type.TypeReference
@@ -20,7 +21,7 @@ class ActionMapperImpl(var context: Context) : ActionMapper {
     init {
         val mapper = ObjectMapper()
         mapper.propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
-        val inputStreamActions= context.assets.open("actionsMapping/MLB.json")
+        val inputStreamActions= context.assets.open("actionsMapping/MLA.json")
         deepLinks = mapper.readValue(inputStreamActions, object : TypeReference<DeepLinkMapping>() {})
     }
     /**
@@ -28,10 +29,10 @@ class ActionMapperImpl(var context: Context) : ActionMapper {
      * @param action nodo que representa un action del json
      * @param params
      */
-    override fun executeAction(action: RuleAction, vararg params: Any?) {
+    override fun startAction(action: RuleAction) {
         val name = action.id
         val deepLink = getDeepLink(name)
-        initAction(deepLink!!, *params)
+        initAction(deepLink!!, action.getFields())
     }
 
     /**
@@ -40,18 +41,19 @@ class ActionMapperImpl(var context: Context) : ActionMapper {
      * @param params
      */
     override fun executeNextField(action: Action, vararg params: Any?) {
-        action.execute(params[0] as List<Field>)
+        action.executeFields(params[0] as List<Field>)
     }
 
     private fun getDeepLink(actionName: String?): String? {
         return deepLinks.actions!![actionName]
     }
 
-    private fun initAction(deepLink: String, vararg params: Any?) {
+    private fun initAction(deepLink: String, fields: ArrayList<Field>?) {
         val uri = Uri.parse(deepLink)
         val intent = getSafeIntent(context)
         intent!!.data = uri
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putParcelableArrayListExtra(BUNDLE_FIELDS, fields)
         context.startActivity(intent)
     }
 

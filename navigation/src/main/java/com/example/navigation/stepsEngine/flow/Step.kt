@@ -52,16 +52,12 @@ class Step {
         return optionalFields!!.sorted().joinToString()
     }
 
-    //TODO: terminar de implementar
     private fun generateNullRules(): Rule? {
         var orRule = OrRule()
         orRule.rules = ArrayList()
         if (requiredFields != null && requiredFields!!.isNotEmpty()) {
             requiredFields?.forEach { it ->
-                Field.getFlowStateField(it)?.let { field ->
-                    orRule.rules.add(NullRule(field.getId()))
-                }
-
+                orRule.rules.add(NullRule(it))
             }
         }
 

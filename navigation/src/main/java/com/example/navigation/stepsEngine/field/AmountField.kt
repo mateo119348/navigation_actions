@@ -1,9 +1,11 @@
 package com.example.navigation.stepsEngine.field
 
 import com.example.navigation.stepsEngine.payment.FlowState
+import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 
-class AmountField : Field() {
+@Parcelize
+class AmountField() : Field() {
 
 
     override fun getId(): String {

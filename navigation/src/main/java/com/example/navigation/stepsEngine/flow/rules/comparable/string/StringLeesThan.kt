@@ -9,6 +9,7 @@ class StringLeesThan : ComparableRule() {
     var count: Int = 0
 
     override fun evaluate(flowState: FlowState): Boolean {
-        return getValue(flowState) != null && (getValue(flowState) as String).length < count
+        val stringToCompare = (getValue(flowState) as String)
+        return stringToCompare != null && stringToCompare.length < count
     }
 }

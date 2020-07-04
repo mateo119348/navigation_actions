@@ -25,21 +25,13 @@ class InstallmentsActivity : ActionAbstractActivity() {
     override val name: String
         get() = ActionName.INSTALLMENTS
 
-    override var fields = ArrayList<Field>()
-        get() {
-            if (field.isEmpty()) {
-                field.add(InstallmentsField())
-            }
-            return field
-        }
-
 
     override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
         TODO("Not yet implemented")
     }
 
 
-    override fun execute(newFields: List<Field>) {
+    override fun executeFields(newFields: List<Field>) {
         TODO("Not yet implemented")
     }
 

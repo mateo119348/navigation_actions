@@ -1,6 +1,11 @@
 package com.example.navigation.stepsEngine.field
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import com.example.navigation.stepsEngine.payment.FlowState
+
+
+
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 
@@ -24,7 +29,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 //        JsonSubTypes.Type(value = CardTypeField::class, name = FieldName.CARD_TYPE),
 //        JsonSubTypes.Type(value = CardTagField::class, name = FieldName.CARD_TAG))
 
-abstract class Field {
+
+abstract class Field : Parcelable{
     abstract fun get(flowState: FlowState): Any?
     abstract fun getId(): String
     abstract fun set(flowState: FlowState, value: Any?)
@@ -51,6 +57,7 @@ abstract class Field {
                 FieldName.ACCOUNT_TYPE -> AccountTypeField()
                 FieldName.CARD_TYPE -> CardTypeField()
                 FieldName.CARD_TAG -> CardTagField()
+                FieldName.CART -> CartField()
                 else -> { throw IllegalStateException("Revisar los fields: key de field inexistente o falta mapeo para $field")}
             }
         }

@@ -2,7 +2,9 @@ package com.example.navigation.stepsEngine.field
 
 import com.example.navigation.stepsEngine.enums.CardType
 import com.example.navigation.stepsEngine.payment.FlowState
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 class CardTypeField : Field() {
     override operator fun get(flowState: FlowState): String? {
         val type = flowState.card.cardType

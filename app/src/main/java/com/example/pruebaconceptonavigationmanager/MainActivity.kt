@@ -35,8 +35,8 @@ class MainActivity : AppCompatActivity() {
         mapper.propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
 
         try {
-            val inputStreamSteps = assets.open("steps/MLB.json")
-            val inputStreamActions = assets.open("stepActions/MLB.json")
+            val inputStreamSteps = assets.open("steps/MLA.json")
+            val inputStreamActions = assets.open("stepActions/MLA.json")
             flow = mapper.readValue(inputStreamSteps, Flow::class.java)
             actions = mapper.readValue(inputStreamActions, object : TypeReference<List<RuleAction?>?>() {})
             inputStreamSteps.close()

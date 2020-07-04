@@ -16,8 +16,6 @@ class PosSelectorActivity : ActionAbstractActivity() {
 
     override val name: String
         get() = ActionName.POS_SELECTOR
-    override var fields =  ArrayList<Field>()
-        get () {return field}
 
 
     override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {

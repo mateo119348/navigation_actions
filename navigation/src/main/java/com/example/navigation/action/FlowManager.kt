@@ -1,7 +1,6 @@
 package com.example.navigation.action
 
 import android.util.Log
-import com.example.navigation.stepsEngine.field.Field
 import com.example.navigation.stepsEngine.flow.Flow
 import com.example.navigation.stepsEngine.flow.Step
 import com.example.navigation.stepsEngine.payment.FlowState
@@ -32,7 +31,10 @@ class FlowManager {
 
     /**
      * Se intstancia el flow correspondiente al tipo de operacion, inicializa el json
-     * ActionMapper: es donde se crean las instancias de las actions con lo necesario para implementar en android
+     * @param actionMapper: contiene el mappeo de las instancias que representan las actions (Activities)
+     * @param flow: entidad que representa el json de los steps (modificar para que ya venga junto con las actions)
+     * @param paymentFlowState: contiene el estado actual del pago
+     * @param actions: lista de actions, procedentes del json (deberia venir en la entidad Flow, junto son los steps)
      */
     fun startFlow(actionMapper: ActionMapper, flow: Flow, paymentFlowState: FlowState, actions: List<RuleAction>) {
         this.actions = actions
@@ -43,9 +45,9 @@ class FlowManager {
     }
 
     /**
-     * Validacion de reglas que pertenecen a campos especificados en List<Field> fields (no se evalua toda la rule aca)
+     * Validacion de un field especifico: se busca sobre las validaciones de salida las que coincidan con el campo requerido
      * @param currentAction accion actual, que en caso de no cumplir con la/s regla/s sabe como resolverla
-     * @param fields campos a validar
+     * @param idField campo a validar
      * @return
     </Field> */
     private fun validate(currentAction: Action, idField: String): Boolean {
@@ -62,9 +64,7 @@ class FlowManager {
     }
 
     /**
-     * Se evalua si la action cumple o no las reglas para pasar al siguiente action o step.
-     * Se actualizan todos los campos que resuelve la action actual para luego evaluar la regla de forma parcial (si no es el ultimo action del step)
-     * o total si ya no tengo mas acciones por cumplir y requiero pasar al proximo step
+     * Ir al siguiente action o step: primero se validan todos los campos de la action actual
      * @param mCurrentAction
      */
     fun next(mCurrentAction: Action) {
@@ -100,24 +100,9 @@ class FlowManager {
 
 
     /**
-     * Se busca el mejor listado de acciones que satisfagan el step actual. Debemos tener en cuenta las siguientes precondiciones:
-     *
-     * 1 - No pueden haber dos acciones activas que satisfagan exactamente los mismos fields (requeridos + opcionales).
-     * Si quisiéramos por ejemplo hacer un A/B testing de dos pantallas distintas que hagan lo mismo, en el endpoint de acciones
-     * le deberían llegar a los distintos usuarios la acción que queramos que se ejecute.
-     * 2 - Dentro de un step, si es satisfecho por varias acciones, el orden de ejecución de las acciones estará dado
-     * por el orden relativo de las acciones.
-     *
-     * La política apunta a resolver el step en la menor cantidad posible de acciones, abarcando todos los fields requeridos
-     * y la mayor cantidad posible de opcionales. Dicho esto, se toman las siguientes prioridades:
-     *
-     * 1- Si hay una acción que matchee todos los fields requeridos, se toma esa acción.
-     * 2- Si hay una acción que matchea más fields requeridos que otra, entonces gana esa acción.
-     * Ej: acción 1 matchea A y B, y acción 2 solo matchea B, entonces gana acción 1.
-     * 3- Si hay dos acciones que matchean los mismos fields requeridos, se toma entonces la que matchee más fields opcionales.
+     * Para el step actual busco cual/es es/son la/s action/s que satisface los campos requeridos
      */
     private fun getStepActions(step: Step): List<RuleAction> {
-
 
         var candidates: List<RuleAction>?
 
@@ -129,7 +114,7 @@ class FlowManager {
         if (candidates!!.isEmpty()) {
             candidates = actions.filter { action ->
                 step.requiredFields?.forEach {
-                    if (action?.fields!!.contains(it)) {
+                    if (action?.containsField(it)) {
                         return@filter true
                     }
                 }
@@ -141,7 +126,7 @@ class FlowManager {
             }
         }
 
-        //TODO: si no tiene ninguna accion asociada con ningun campo requerido, buscar una accion sociada al identificador del step
+        //TODO: si no tiene ninguna accion asociada con ningun campo requerido, buscar una accion asociada al identificador del step
         require(candidates!!.isNotEmpty()) { String.format("the %s step has no any action associated. Check steps and actions", currentStep.stepIdentifier.name) }
 
 
@@ -150,14 +135,14 @@ class FlowManager {
 
     /**
      * Chequea si existe una proxima Action dentro de las acciones del Step actual
-     * Si no es asi, se evalua la rule del step (se deberia cumplir )
+     * Si no es asi, se evalua la rule del step (se deberia cumplir ) y avanza al siguiente step
      */
     private fun executeNext(mCurrentAction: Action) {
 
         val nextAction = currentStep.getNextAction(currentAction)
         if (nextAction != null) {
             currentAction = nextAction
-            executeAction(currentAction!!)
+            startAction(currentAction!!)
         } else if (!currentStep.mustExecute(paymentFlowState)) {
             executeNextStep(mCurrentAction)
         } else {
@@ -165,25 +150,29 @@ class FlowManager {
         }
     }
 
+    /**
+     * Busca el siguiente step a ejecutar
+     * Si la primera action del nuevo step actual coincide con la ultima action del step anterior (mCurrentAction),
+     * entonces sobre esa misma action (mCurrentAction), ejecuta los campos requeridos por el currentStep, sino ejecuta la currentAction
+     */
     private fun executeNextStep(mCurrentAction: Action) {
         currentStep = flow!!.getNext(paymentFlowState)
 
         if (currentAction!!.id == mCurrentAction.name) {
             executeNextField(mCurrentAction)
         } else {
-            executeAction(currentAction!!)
+            startAction(currentAction!!)
         }
     }
 
     private fun executeFirstStep() {
         currentStep = flow!!.getNext(paymentFlowState)
 
-        executeAction(currentAction!!)
+        startAction(currentAction!!)
     }
 
-    private fun executeAction(action: RuleAction) {
-        //TODO: evaluar que partametros son necesarions pasar a la accion
-        actionMapper!!.executeAction(action, currentStep.requiredFields, currentStep.optionalFields)
+    private fun startAction(action: RuleAction) {
+        actionMapper!!.startAction(action)
     }
 
     private fun executeNextField(action: Action) {

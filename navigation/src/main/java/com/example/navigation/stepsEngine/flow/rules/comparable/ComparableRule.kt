@@ -9,7 +9,7 @@ import java.math.BigDecimal
 
 abstract class ComparableRule : Rule() {
 
-    open var field: String? = null
+    protected open var field: String? = null
     open lateinit var value: String
     var valueType: String? = null
     var isNot = false
@@ -23,7 +23,11 @@ abstract class ComparableRule : Rule() {
     }
 
     fun getValue(flowState: FlowState): Any? {
-        return getField()!!.get(flowState)
+
+        val value = getField()!!.get(flowState)
+        if (this !is NullRule)
+            checkNotNull(value) { String.format("the %s field must not be null", getField()!!.getId())}
+        return value
     }
 
 }

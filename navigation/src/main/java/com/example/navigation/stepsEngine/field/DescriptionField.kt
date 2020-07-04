@@ -1,8 +1,9 @@
 package com.example.navigation.stepsEngine.field
 
 import com.example.navigation.stepsEngine.payment.FlowState
+import kotlinx.android.parcel.Parcelize
 
-
+@Parcelize
 class DescriptionField : Field() {
     override fun getId(): String {
         return FieldName.DESCRIPTION
