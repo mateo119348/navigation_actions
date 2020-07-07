@@ -1,6 +1,9 @@
 package com.example.navigation.stepsEngine.payment.cart
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import java.util.*
+
 
 class Cart {
     var id: Long? = null

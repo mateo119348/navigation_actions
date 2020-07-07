@@ -12,6 +12,6 @@ class StringIsContainedRule : ComparableRule() {
         val string = getValue(flowState) as String?
         val to = if (end == null) string!!.length else end!!
         val s = string!!.substring(from, to)
-        return value!!.contains(s)
+        return value.contains(s)
     }
 }

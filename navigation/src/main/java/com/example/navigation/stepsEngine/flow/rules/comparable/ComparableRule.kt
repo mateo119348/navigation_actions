@@ -1,11 +1,9 @@
 package com.example.navigation.stepsEngine.flow.rules.comparable
 
+import com.example.navigation.action.FlowManager
 import com.example.navigation.stepsEngine.field.Field
-import com.example.navigation.stepsEngine.field.Field.Companion.getFlowStateField
 import com.example.navigation.stepsEngine.flow.rules.base.Rule
 import com.example.navigation.stepsEngine.payment.FlowState
-import java.lang.reflect.Type
-import java.math.BigDecimal
 
 abstract class ComparableRule : Rule() {
 
@@ -18,7 +16,7 @@ abstract class ComparableRule : Rule() {
 
     private fun getField(): Field? {
         if (fieldValue == null)
-            fieldValue = getFlowStateField(field!!)!!
+            fieldValue = FlowManager.getField(field!!)
         return fieldValue;
     }
 
@@ -26,7 +24,7 @@ abstract class ComparableRule : Rule() {
 
         val value = getField()!!.get(flowState)
         if (this !is NullRule)
-            checkNotNull(value) { String.format("the %s field must not be null", getField()!!.getId())}
+            checkNotNull(value) { String.format("the %s field must not be null", getField()!!.id)}
         return value
     }
 

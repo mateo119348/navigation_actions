@@ -1,6 +1,7 @@
 package com.example.navigation.stepsEngine.flow
 
 import com.example.navigation.action.RuleAction
+import com.example.navigation.mappers.FieldMapper
 import com.example.navigation.stepsEngine.enums.StepIdentifier
 import com.example.navigation.stepsEngine.field.Field
 import com.example.navigation.stepsEngine.flow.rules.base.Rule
@@ -27,6 +28,7 @@ class Step {
         }
 
 
+    lateinit var fieldMapper: FieldMapper
 
     var actions: List<RuleAction> = ArrayList()
 
@@ -57,7 +59,8 @@ class Step {
         orRule.rules = ArrayList()
         if (requiredFields != null && requiredFields!!.isNotEmpty()) {
             requiredFields?.forEach { it ->
-                orRule.rules.add(NullRule(it))
+                var nullRule = NullRule(it)
+                orRule.rules.add(nullRule)
             }
         }
 

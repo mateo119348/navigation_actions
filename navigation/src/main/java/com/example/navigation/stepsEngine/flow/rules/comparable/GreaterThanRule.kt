@@ -7,6 +7,7 @@ class GreaterThanRule : ComparableRule() {
     lateinit var count: BigDecimal
 
     override fun evaluate(flowState: FlowState): Boolean {
-        return getValue(flowState) != null && (getValue(flowState) as BigDecimal)!! > count!!
+        var value = getValue(flowState)
+        return  (value as BigDecimal) > count
     }
 }

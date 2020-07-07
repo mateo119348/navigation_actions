@@ -1,5 +1,7 @@
 package com.example.navigation.stepsEngine.flow
 
+import com.example.navigation.action.RuleAction
+import com.example.navigation.mappers.FieldMapper
 import com.example.navigation.stepsEngine.enums.OperationType
 import com.example.navigation.stepsEngine.flow.rules.actionValidation.ActionValidation
 import com.example.navigation.stepsEngine.payment.FlowState
@@ -9,12 +11,14 @@ class Flow {
     lateinit var operationType: OperationType
     lateinit var steps: List<Step>
     lateinit var validations: List<ActionValidation>
+    lateinit var actions: List<RuleAction>
 
-    fun getNext(flowState: FlowState): Step {
+    fun getNext(flowState: FlowState, fieldMapper: FieldMapper): Step {
 
         var step: Step? = null
         run loop@{
             steps.forEach {
+                it.fieldMapper = fieldMapper
                 if (it.mustExecute(flowState)) {
                     step = it
                     it.wasExecuted = true
@@ -45,6 +49,6 @@ class Flow {
             step = steps[index]
         }
 
-        return step!!
+        return step
     }
 }

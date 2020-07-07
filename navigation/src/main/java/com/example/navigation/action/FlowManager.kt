@@ -1,6 +1,10 @@
 package com.example.navigation.action
 
 import android.util.Log
+import com.example.navigation.mappers.ActionMapper
+import com.example.navigation.stepsEngine.field.Field
+import com.example.navigation.stepsEngine.field.FieldId
+import com.example.navigation.mappers.FieldMapper
 import com.example.navigation.stepsEngine.flow.Flow
 import com.example.navigation.stepsEngine.flow.Step
 import com.example.navigation.stepsEngine.payment.FlowState
@@ -8,8 +12,9 @@ import com.example.navigation.stepsEngine.payment.FlowState
 class FlowManager {
     lateinit var paymentFlowState: FlowState private set
     private lateinit var actionMapper: ActionMapper
+    private lateinit var fieldMapper: FieldMapper
     private lateinit var flow: Flow
-    private lateinit var currentAction: RuleAction
+    private var currentAction = RuleAction()
 
     private var currentStep = Step()
         set(value) {
@@ -17,12 +22,11 @@ class FlowManager {
             field.actions = getStepActions(field)
             currentAction = field.getNextAction(null)!!
         }
-    private lateinit var actions: List<RuleAction>
 
 
     private fun validateAll(mCurrentAction: Action): Boolean {
-        mCurrentAction.fields.forEach {
-            if (!validate(mCurrentAction, it.getId()))
+        mCurrentAction.fields?.forEach {
+            if (!validate(mCurrentAction, it.id))
                 return false
         }
 
@@ -32,16 +36,22 @@ class FlowManager {
     /**
      * Se intstancia el flow correspondiente al tipo de operacion, inicializa el json
      * @param actionMapper: contiene el mappeo de las instancias que representan las actions (Activities)
-     * @param flow: entidad que representa el json de los steps (modificar para que ya venga junto con las actions)
+     * @param flow: entidad que representa el json de los steps y actions
      * @param paymentFlowState: contiene el estado actual del pago
-     * @param actions: lista de actions, procedentes del json (deberia venir en la entidad Flow, junto son los steps)
      */
-    fun startFlow(actionMapper: ActionMapper, flow: Flow, paymentFlowState: FlowState, actions: List<RuleAction>) {
-        this.actions = actions
+    fun startFlow(actionMapper: ActionMapper, flow: Flow, paymentFlowState: FlowState, fieldMapper: FieldMapper) {
+        this.fieldMapper = fieldMapper
         this.flow = flow
         this.actionMapper = actionMapper
         this.paymentFlowState = paymentFlowState
         executeFirstStep()
+    }
+
+    /**
+     * Este metodo es llamado por la action para modificar los valores de FlowState
+     */
+    fun setField(field: Field, value: Any?) {
+        field.set(paymentFlowState, value)
     }
 
     /**
@@ -50,8 +60,8 @@ class FlowManager {
      * @param idField campo a validar
      * @return
     </Field> */
-    private fun validate(currentAction: Action, idField: String): Boolean {
-        val validations = flow.validations.filter { it -> it.field == idField }
+    private fun validate(currentAction: Action, idField: FieldId): Boolean {
+        val validations = flow.validations.filter { it -> it.field == idField.id()}
 
         validations.forEach {
             if (!it.rule.evaluate(paymentFlowState)) {
@@ -84,9 +94,8 @@ class FlowManager {
      *
      */
     fun back(mCurrentAction: Action) {
-        mCurrentAction.fields.forEach {
-            //TODO: analizar bien si alcanza con volver a null el valor
-            it.set(paymentFlowState, null)
+        mCurrentAction.fields?.forEach {
+            it.initState(paymentFlowState)
         }
         val previousAction = currentStep.previousAction(currentAction)
         if (previousAction == null) {
@@ -106,31 +115,31 @@ class FlowManager {
 
         var candidates: List<RuleAction>?
 
-        candidates = actions.filter {
-            toString().contains(step.requiredFieldsToString()!!)
+        candidates = flow.actions.filter {
+            toString().contains(step.requiredFieldsToString())
         }
 
 
-        if (candidates!!.isEmpty()) {
-            candidates = actions.filter { action ->
+        if (candidates.isEmpty()) {
+            candidates = flow.actions.filter { action ->
                 step.requiredFields?.forEach {
-                    if (action?.containsField(it)) {
+                    if (action.containsField(it)) {
                         return@filter true
                     }
                 }
                 false
             }
-        } else if (candidates!!.size > 1) {
-            candidates = candidates?.filter {
-                toString().contains(step.optionalFieldsToString()!!)
+        } else if (candidates.size > 1) {
+            candidates = candidates.filter {
+                toString().contains(step.optionalFieldsToString())
             }
         }
 
         //TODO: si no tiene ninguna accion asociada con ningun campo requerido, buscar una accion asociada al identificador del step
-        require(candidates!!.isNotEmpty()) { String.format("the %s step has no any action associated. Check steps and actions", currentStep.stepIdentifier.name) }
+        require(candidates.isNotEmpty()) { String.format("the %s step has no any action associated. Check steps and actions", currentStep.stepIdentifier.name) }
 
 
-        return candidates!!
+        return candidates
     }
 
     /**
@@ -142,7 +151,7 @@ class FlowManager {
         val nextAction = currentStep.getNextAction(currentAction)
         if (nextAction != null) {
             currentAction = nextAction
-            startAction(currentAction!!)
+            startAction(currentAction)
         } else if (!currentStep.mustExecute(paymentFlowState)) {
             executeNextStep(mCurrentAction)
         } else {
@@ -156,29 +165,40 @@ class FlowManager {
      * entonces sobre esa misma action (mCurrentAction), ejecuta los campos requeridos por el currentStep, sino ejecuta la currentAction
      */
     private fun executeNextStep(mCurrentAction: Action) {
-        currentStep = flow!!.getNext(paymentFlowState)
+        currentStep = flow.getNext(paymentFlowState, fieldMapper)
 
-        if (currentAction!!.id == mCurrentAction.name) {
+        if (currentAction.id == mCurrentAction.name.id()) {
             executeNextField(mCurrentAction)
         } else {
-            startAction(currentAction!!)
+            startAction(currentAction)
         }
     }
 
     private fun executeFirstStep() {
-        currentStep = flow!!.getNext(paymentFlowState)
+        currentStep = flow.getNext(paymentFlowState, fieldMapper)
 
-        startAction(currentAction!!)
+        startAction(currentAction)
     }
 
     private fun startAction(action: RuleAction) {
-        actionMapper!!.startAction(action)
+        actionMapper.startAction(action)
     }
 
     private fun executeNextField(action: Action) {
-        //TODO: evaluar que partametros son necesarions pasar a la accion
-        actionMapper!!.executeNextField(action, currentStep.requiredFields, currentStep.optionalFields)
+        //TODO: Evaluar si es necesario pasar tambien los campos opcionales llegado el caso
+        actionMapper.executeNextField(action, getFields(currentStep.requiredFields))
     }
+
+    private fun getFields(fieldsStr: List<String>?) : List<Field>? {
+        val fields = ArrayList<Field>()
+        fieldsStr?.forEach {
+            fields.add(fieldMapper.getField(it))
+        }
+        return fields
+    }
+
+
+
 
 
     companion object {
@@ -192,5 +212,8 @@ class FlowManager {
             }
             private set
 
+        fun getField(fieldId: String): Field {
+            return i?.fieldMapper?.getField(fieldId)!!
+        }
     }
 }

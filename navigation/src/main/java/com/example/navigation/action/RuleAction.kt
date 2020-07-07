@@ -1,21 +1,13 @@
 package com.example.navigation.action
 
 import com.example.navigation.stepsEngine.field.Field
+import com.example.navigation.mappers.FieldMapper
 
 class RuleAction {
     var id: String? = null
-    private var fields: ArrayList<String>? = null
-    private var fieldsImpl: ArrayList<Field>? = null
+    var fields: ArrayList<String>? = null
 
-    fun getFields(): ArrayList<Field>?{
-        if (fieldsImpl == null) {
-            fieldsImpl = ArrayList()
-            fields?.forEach {
-                fieldsImpl!!.add(Field.getFlowStateField(it)!!)
-            }
-        }
-        return fieldsImpl;
-    }
+
 
     fun containsField(field: String): Boolean{
         return fields!!.contains(field)

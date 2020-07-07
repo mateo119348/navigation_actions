@@ -5,6 +5,6 @@ import com.example.navigation.stepsEngine.payment.FlowState
 
 class StringContainsRule : ComparableRule() {
     override fun evaluate(flowState: FlowState): Boolean {
-        return (getValue(flowState) as String?)!!.contains(value!!)
+        return (getValue(flowState) as String?)!!.contains(value)
     }
 }

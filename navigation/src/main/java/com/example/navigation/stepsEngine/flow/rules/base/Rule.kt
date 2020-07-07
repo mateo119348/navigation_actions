@@ -1,5 +1,6 @@
 package com.example.navigation.stepsEngine.flow.rules.base
 
+import com.example.navigation.mappers.FieldMapper
 import com.example.navigation.stepsEngine.flow.rules.comparable.GreaterThanRule
 import com.example.navigation.stepsEngine.flow.rules.comparable.LessEqualThanRule
 import com.example.navigation.stepsEngine.flow.rules.comparable.NullRule
@@ -30,5 +31,6 @@ abstract class Rule {
      * @param flowState the current payment information. Must NOT be `null`.
      * @return The result of the evaluation
      */
+
     abstract fun evaluate(flowState: FlowState): Boolean
 }
