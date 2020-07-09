@@ -2,7 +2,9 @@ package com.example.navigation.flowEngine
 
 import android.util.Log
 import com.example.navigation.flowEngine.actions.Action
+import com.example.navigation.flowEngine.actions.FunctionAction
 import com.example.navigation.flowEngine.actions.RuleAction
+import com.example.navigation.flowEngine.actions.ScreenAction
 import com.example.navigation.flowEngine.steps.field.Field
 import com.example.navigation.flowEngine.steps.field.FieldId
 import com.example.navigation.flowEngine.steps.Step
@@ -91,11 +93,10 @@ class FlowManager {
      * 1-deshago los cambios sobre los campos que haya afectado el action actual (la pantalla actual
      * 2-Busco si existe una accion previa a la actual
      * 3-Si existe, vuelvo a esa accion, sino, busco el step anterior al actual y su ultima accion
-     *
      */
-    fun goBack(mCurrentAction: Action) {
+    fun goBack(currentScreenAction: ScreenAction) {
 
-        resetFields(mCurrentAction)
+        resetFields(currentScreenAction)
 
         var previousRuleAction = currentStep.previousAction(currentAction)
         var previousAction = flowMediator.getAction(previousRuleAction)
@@ -123,7 +124,7 @@ class FlowManager {
         }
     }
 
-    fun addAction(action: Action) {
+    fun addAction(action: FunctionAction) {
         flowMediator.addAction(action)
     }
 

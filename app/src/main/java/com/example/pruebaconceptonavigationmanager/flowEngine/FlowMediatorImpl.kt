@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import com.example.navigation.flowEngine.actions.Action
 import com.example.navigation.flowEngine.FlowMediator
+import com.example.navigation.flowEngine.actions.FunctionAction
 import com.example.navigation.flowEngine.actions.RuleAction
 import com.example.navigation.flowEngine.steps.field.FieldMapper
 import com.example.pruebaconceptonavigationmanager.flowEngine.actions.ActionWrapper
@@ -18,7 +19,7 @@ class FlowMediatorImpl(private var context: Context,
 
     private val INTERNAL = "INTERNAL"
 
-    private var actions = ArrayList<Action>()
+    private var actions = ArrayList<FunctionAction>()
 
     /**
      * Inicia una instancia de Action a partir de un deep link
@@ -37,11 +38,11 @@ class FlowMediatorImpl(private var context: Context,
 
     }
 
-    override fun addAction(action: Action) {
+    override fun addAction(action: FunctionAction) {
         actions.add(action)
     }
 
-    override fun getAction(action: RuleAction?): Action? {
+    override fun getAction(action: RuleAction?): FunctionAction? {
         return actions.firstOrNull() { it.name.id() == action?.id }
     }
 

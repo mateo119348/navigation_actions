@@ -9,7 +9,7 @@ import com.example.navigation.flowEngine.steps.field.FieldId
 import com.example.pruebaconceptonavigationmanager.flowEngine.actions.ActionWrapper
 import com.example.pruebaconceptonavigationmanager.flowEngine.FlowMediatorImpl.Companion.BUNDLE_ACTION_WRAPPER
 
-abstract class ActionAbstractActivity: AppCompatActivity(), Action {
+abstract class ActionAbstractActivity: AppCompatActivity(), ScreenAction {
 
 
     override val fields: List<Field>?
@@ -53,7 +53,7 @@ abstract class ActionAbstractActivity: AppCompatActivity(), Action {
         super.onBackPressed()
     }
 
-    open fun addAction(action: Action){
+    open fun addAction(action: FunctionAction){
         FlowManager.i?.addAction(action)
     }
 
