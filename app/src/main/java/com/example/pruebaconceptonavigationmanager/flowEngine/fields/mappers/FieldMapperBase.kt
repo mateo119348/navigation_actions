@@ -1,7 +1,7 @@
 package com.example.pruebaconceptonavigationmanager.flowEngine.fields.mappers
 
-import com.example.navigation.stepsEngine.field.Field
-import com.example.navigation.mappers.FieldMapper
+import com.example.navigation.steps.field.Field
+import com.example.navigation.steps.field.FieldMapper
 import com.example.pruebaconceptonavigationmanager.flowEngine.fields.*
 import com.example.pruebaconceptonavigationmanager.flowEngine.fields.Fields.ACQUIRER
 import com.example.pruebaconceptonavigationmanager.flowEngine.fields.Fields.DESCRIPTION

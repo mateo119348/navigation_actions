@@ -1,8 +1,8 @@
 package com.example.navigation;
 
 
-import com.example.navigation.stepsEngine.field.Field;
-import com.example.navigation.stepsEngine.flow.rules.base.Rule;
+import com.example.navigation.steps.field.Field;
+import com.example.navigation.steps.flow.rules.base.Rule;
 
 import java.util.Map;
 

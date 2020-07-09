@@ -3,7 +3,7 @@ package com.example.pruebaconceptonavigationmanager.flowEngine.actions
 import android.os.Parcelable
 import com.example.navigation.action.Action
 import com.example.navigation.action.ActionId
-import com.example.navigation.stepsEngine.field.Field
+import com.example.navigation.steps.field.Field
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

@@ -1,9 +1,9 @@
 package com.example.navigation.action
 
 
-import com.example.navigation.stepsEngine.field.Field
-import com.example.navigation.stepsEngine.field.FieldId
-import com.example.navigation.stepsEngine.flow.rules.actionValidation.ActionValidation
+import com.example.navigation.steps.field.Field
+import com.example.navigation.steps.field.FieldId
+import com.example.navigation.steps.flow.rules.actionValidation.ActionValidation
 
 
 interface Action {

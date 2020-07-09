@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.example.navigation.action.Action
-import com.example.navigation.mappers.FlowMediator
+import com.example.navigation.flowEngine.FlowMediator
 import com.example.navigation.action.RuleAction
-import com.example.navigation.mappers.FieldMapper
+import com.example.navigation.steps.field.FieldMapper
 import com.example.pruebaconceptonavigationmanager.flowEngine.actions.ActionWrapper
 import com.example.pruebaconceptonavigationmanager.flowEngine.actions.mappers.ActionsMapperBase
 

@@ -2,9 +2,9 @@ package com.example.pruebaconceptonavigationmanager.activities.chooser
 
 import android.os.Bundle
 import android.widget.Toast
-import com.example.navigation.action.FlowManager
-import com.example.navigation.stepsEngine.enums.CardType
-import com.example.navigation.stepsEngine.flow.rules.actionValidation.ActionValidation
+import com.example.navigation.flowEngine.FlowManager
+import com.example.navigation.steps.enums.CardType
+import com.example.navigation.steps.flow.rules.actionValidation.ActionValidation
 import com.example.pruebaconceptonavigationmanager.R
 import com.example.pruebaconceptonavigationmanager.activities.ActionAbstractActivity
 import com.example.pruebaconceptonavigationmanager.flowEngine.fields.Fields
