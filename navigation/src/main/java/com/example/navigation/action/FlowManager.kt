@@ -54,13 +54,14 @@ class FlowManager {
     }
 
     /**
-     * Validacion de un field especifico: se busca sobre las validaciones de salida las que coincidan con el campo requerido
+     * Validacion de un field especifico: se busca sobre las validaciones de salida las que coincidan
+     * con el campo requerido
      * @param currentAction accion actual, que en caso de no cumplir con la/s regla/s sabe como resolverla
      * @param idField campo a validar
      * @return
     </Field> */
     private fun validate(currentAction: Action, idField: FieldId): Boolean {
-        val validations = flow.validations.filter { it -> it.field == idField.id()}
+        val validations = flow.validations.filter { it.field == idField.id() }
 
         validations.forEach {
             if (!it.rule.evaluate(flowState)) {
@@ -92,25 +93,34 @@ class FlowManager {
      * 3-Si existe, vuelvo a esa accion, sino, busco el step anterior al actual y su ultima accion
      *
      */
-    fun back(mCurrentAction: Action) {
-        mCurrentAction.fields?.forEach {
-            it.initState(flowState)
+    fun goBack(mCurrentAction: Action) {
+
+        resetFields(mCurrentAction)
+
+        var previousRuleAction = currentStep.previousAction(currentAction)
+        var previousAction = flowMediator.getAction(previousRuleAction)
+
+        while (previousRuleAction != null && previousAction != null) {
+            resetFields(previousAction)
+            previousRuleAction = currentStep.previousAction(previousRuleAction)
+            previousAction = flowMediator.getAction(previousRuleAction)
         }
-        var previousAction = currentStep.previousAction(currentAction)
-
-        while ( previousAction != null && flowMediator.containsAction(previousAction)){
-            previousAction = currentStep.previousAction(currentAction)
-        }
 
 
-        if (previousAction == null) {
+        if (previousRuleAction == null) {
             currentStep = flow.getPreviousStep(currentStep)
             currentAction = currentStep.getLastAction()
 
         } else {
-            currentAction = previousAction
+            currentAction = previousRuleAction
         }
 
+    }
+
+    private fun resetFields(action: Action) {
+        action.fields?.forEach {
+            it.initState(flowState)
+        }
     }
 
     fun addAction(action: Action) {
@@ -145,8 +155,10 @@ class FlowManager {
             }
         }
 
-        //TODO: si no tiene ninguna accion asociada con ningun campo requerido, buscar una accion asociada al identificador del step
-        require(candidates.isNotEmpty()) { String.format("the %s step has no any action associated. Check steps and actions", currentStep.stepIdentifier.name) }
+        //TODO: si no tiene ninguna accion asociada con ningun campo requerido, buscar una accion asociada
+        // al identificador del step
+        require(candidates.isNotEmpty()) { String.format("the %s step has no any action associated. " +
+            "Check steps and actions", currentStep.stepIdentifier.name) }
 
 
         return candidates
@@ -164,14 +176,16 @@ class FlowManager {
         } else if (!currentStep.mustExecute(flowState)) {
             executeNextStep()
         } else {
-            throw IllegalStateException("Revisar las rules y validations de salida, se tendrian que haber cumplido las validaciones")
+            throw IllegalStateException("Revisar las rules y validations de salida, " +
+                "se tendrian que haber cumplido las validaciones")
         }
     }
 
     /**
      * Busca el siguiente step a ejecutar
      * Si la primera action del nuevo step actual coincide con la ultima action del step anterior (mCurrentAction),
-     * entonces sobre esa misma action (mCurrentAction), ejecuta los campos requeridos por el currentStep, sino ejecuta la currentAction
+     * entonces sobre esa misma action (mCurrentAction), ejecuta los campos requeridos por el currentStep,
+     * sino ejecuta la currentAction
      */
     private fun executeNextStep() {
         currentStep = flow.getNext(flowState)
@@ -182,9 +196,8 @@ class FlowManager {
     }
 
     private fun startAction(action: RuleAction) {
-        flowMediator.startAction(action)
+        flowMediator.executeAction(action)
     }
-
 
 
     companion object {

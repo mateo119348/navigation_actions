@@ -6,7 +6,7 @@ import com.example.navigation.action.FlowManager
 import com.example.navigation.stepsEngine.flow.rules.actionValidation.ActionValidation
 import com.example.pruebaconceptonavigationmanager.R
 import com.example.pruebaconceptonavigationmanager.activities.ActionAbstractActivity
-import com.example.pruebaconceptonavigationmanager.flowEngine.mapperImpl.FieldIdImpl
+import com.example.pruebaconceptonavigationmanager.flowEngine.fields.Fields
 import kotlinx.android.synthetic.main.activity_payment_description.*
 
 class DescriptionActivity : ActionAbstractActivity() {
@@ -20,7 +20,7 @@ class DescriptionActivity : ActionAbstractActivity() {
     }
 
     private fun confirmInputs() {
-        setField(FieldIdImpl.DESCRIPTION, txtDescription.text.toString())
+        setField(Fields.DESCRIPTION, txtDescription.text.toString())
 
         FlowManager.i!!.next(this)
     }
@@ -31,7 +31,8 @@ class DescriptionActivity : ActionAbstractActivity() {
             ActionValidation.Codes.DESCRIPTION_TOO_LARGE -> {
                 Toast.makeText(applicationContext, "Descripcion demasiado larga", Toast.LENGTH_LONG).show()
             }
-            else -> {throw IllegalStateException("Revisar los codigos de error:  falta mapeo para ${unfulfilledRule.id}")}
+            else -> {throw IllegalStateException("Revisar los codigos de error:  " +
+                "falta mapeo para ${unfulfilledRule.id}")}
         }
 
     }

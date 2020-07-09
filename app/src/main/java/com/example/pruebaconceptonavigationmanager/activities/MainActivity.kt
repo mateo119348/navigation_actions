@@ -8,8 +8,8 @@ import com.example.navigation.stepsEngine.flow.Flow
 import com.example.navigation.stepsEngine.payment.FlowState
 import com.example.pruebaconceptonavigationmanager.R
 import com.example.pruebaconceptonavigationmanager.flowEngine.FlowMediatorImpl
-import com.example.pruebaconceptonavigationmanager.flowEngine.mapperImpl.ActionHeaderMapperBase
-import com.example.pruebaconceptonavigationmanager.flowEngine.mapperImpl.FieldMapperBase
+import com.example.pruebaconceptonavigationmanager.flowEngine.actions.mappers.ActionsMapperBase
+import com.example.pruebaconceptonavigationmanager.flowEngine.fields.mappers.FieldMapperBase
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
             val fieldMapper = FieldMapperBase()
             val flowState = FlowState(fieldMapper)
-            val actionHeaderMapper = ActionHeaderMapperBase()
+            val actionHeaderMapper = ActionsMapperBase()
             val flowMediator = FlowMediatorImpl(applicationContext, fieldMapper, actionHeaderMapper)
             i!!.startFlow(flowMediator, flow, flowState)
         } catch (ex: Exception) {

@@ -6,7 +6,7 @@ import com.example.navigation.action.FlowManager
 import com.example.navigation.stepsEngine.flow.rules.actionValidation.ActionValidation
 import com.example.pruebaconceptonavigationmanager.R
 import com.example.pruebaconceptonavigationmanager.activities.ActionAbstractActivity
-import com.example.pruebaconceptonavigationmanager.flowEngine.mapperImpl.FieldIdImpl
+import com.example.pruebaconceptonavigationmanager.flowEngine.fields.Fields
 import kotlinx.android.synthetic.main.activity_calculator.*
 import java.math.BigDecimal
 
@@ -41,7 +41,8 @@ open class CalculatorActivity : ActionAbstractActivity() {
             ActionValidation.Codes.AMOUNT_OUT_OF_RANGE -> {
                 Toast.makeText(applicationContext, "El monto no esta en el rango", Toast.LENGTH_LONG).show()
             }
-            else -> {throw IllegalStateException("Revisar los codigos de error:  falta mapeo para ${unfulfilledRule.id}")}
+            else -> {throw IllegalStateException("Revisar los codigos de error:  " +
+                "falta mapeo para ${unfulfilledRule.id}")}
         }
 
 
@@ -49,7 +50,7 @@ open class CalculatorActivity : ActionAbstractActivity() {
 
 
     protected open fun confirmInputs() {
-        setField(FieldIdImpl.AMOUNT, BigDecimal(txtAmount.text.toString()))
+        setField(Fields.AMOUNT, BigDecimal(txtAmount.text.toString()))
         FlowManager.i!!.next(this)
     }
 

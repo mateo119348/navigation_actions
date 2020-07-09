@@ -1,4 +1,4 @@
-package com.example.pruebaconceptonavigationmanager.flowEngine
+package com.example.pruebaconceptonavigationmanager.flowEngine.actions
 
 import android.os.Parcelable
 import com.example.navigation.action.Action
@@ -7,9 +7,10 @@ import com.example.navigation.stepsEngine.field.Field
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class ActionHeader(val actionId: ActionId,
+class ActionWrapper(val actionId: ActionId,
     val fields: List<Field>?,
-    val deepLink: String? = null,
-    val activityClass: Class<Action>? = null) : Parcelable {
+    val activityClass: Class<out Action>? = null,
+    val deepLink: String? = null) : Parcelable {
 
 }
+

@@ -1,10 +1,10 @@
-package com.example.pruebaconceptonavigationmanager.flowEngine.mapperImpl
+package com.example.pruebaconceptonavigationmanager.flowEngine.fields
 
 import com.example.navigation.stepsEngine.field.FieldId
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-enum class FieldIdImpl: FieldId {
+enum class Fields: FieldId {
     ACQUIRER,
     DESCRIPTION,
     PAYMENT_METHOD_ID,

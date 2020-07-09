@@ -5,28 +5,29 @@ import android.os.Bundle
 import com.example.navigation.action.*
 import com.example.navigation.stepsEngine.field.Field
 import com.example.navigation.stepsEngine.field.FieldId
-import com.example.pruebaconceptonavigationmanager.flowEngine.ActionHeader
+import com.example.pruebaconceptonavigationmanager.flowEngine.actions.ActionWrapper
+import com.example.pruebaconceptonavigationmanager.flowEngine.FlowMediatorImpl.Companion.BUNDLE_ACTION_WRAPPER
 
 abstract class ActionAbstractActivity: AppCompatActivity(), Action {
 
 
     override val fields: List<Field>?
-        get() = actionHeader?.fields
+        get() = actionWrapper?.fields
 
     override val name: ActionId
-        get() = actionHeader!!.actionId
+        get() = actionWrapper!!.actionId
 
 
-    private var actionHeader: ActionHeader? = null
+    private var actionWrapper: ActionWrapper? = null
         get() {
             field ?: run {
-                field = intent.getParcelableExtra(BUNDLE_ACTION_HEADER)
+                field = intent.getParcelableExtra(BUNDLE_ACTION_WRAPPER)
             }
             return field
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        actionHeader = intent.getParcelableExtra(BUNDLE_ACTION_HEADER)
+        actionWrapper = intent.getParcelableExtra(BUNDLE_ACTION_WRAPPER)
         super.onCreate(savedInstanceState)
     }
 
@@ -41,13 +42,13 @@ abstract class ActionAbstractActivity: AppCompatActivity(), Action {
         }
     }
 
-    override fun getField(idField: FieldId): Field {
-        return FlowManager.i?.getField(idField)!!
+    override fun getField(fieldId: FieldId): Field {
+        return FlowManager.i?.getField(fieldId)!!
     }
 
 
     override fun onBackPressed() {
-        FlowManager.i?.back(this)
+        FlowManager.i?.goBack(this)
         super.onBackPressed()
     }
 
@@ -56,7 +57,6 @@ abstract class ActionAbstractActivity: AppCompatActivity(), Action {
     }
 
     override fun execute() {}
-
 
 
 }

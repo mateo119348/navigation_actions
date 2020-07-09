@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.widget.Toast
 import com.example.navigation.action.FlowManager
 import com.example.navigation.stepsEngine.enums.CardType
-import com.example.navigation.stepsEngine.field.*
 import com.example.navigation.stepsEngine.flow.rules.actionValidation.ActionValidation
 import com.example.pruebaconceptonavigationmanager.R
 import com.example.pruebaconceptonavigationmanager.activities.ActionAbstractActivity
-import com.example.pruebaconceptonavigationmanager.flowEngine.mapperImpl.FieldIdImpl
+import com.example.pruebaconceptonavigationmanager.flowEngine.fields.Fields
 import kotlinx.android.synthetic.main.activity_chooser.*
 
 class ChooserActivity : ActionAbstractActivity() {
@@ -47,7 +46,7 @@ class ChooserActivity : ActionAbstractActivity() {
     }
 
     fun setTypeCard(cardType: CardType) {
-        setField(FieldIdImpl.CARD_TYPE, cardType)
+        setField(Fields.CARD_TYPE, cardType)
     }
 
 
@@ -58,7 +57,8 @@ class ChooserActivity : ActionAbstractActivity() {
             ActionValidation.Codes.CARD_TYPE_IS_NULL -> {
                 Toast.makeText(applicationContext, "No se ha seleccionado tipo de tarjeta", Toast.LENGTH_LONG).show()
             }
-            else -> {throw IllegalStateException("Revisar los codigos de error:  falta mapeo para ${unfulfilledRule.id}")}
+            else -> {throw IllegalStateException("Revisar los codigos de error:  " +
+                "falta mapeo para ${unfulfilledRule.id}")}
         }
     }
 

@@ -4,8 +4,8 @@ import com.example.navigation.action.Action
 import com.example.navigation.action.RuleAction
 
 interface FlowMediator : Cloneable{
-    fun startAction(action: RuleAction)
+    fun executeAction(action: RuleAction)
     fun addAction(action: Action)
-    fun containsAction(action: RuleAction) : Boolean
+    fun getAction(action: RuleAction?): Action?
     public override fun clone(): FlowMediator
 }
