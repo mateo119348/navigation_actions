@@ -18,7 +18,4 @@ class PosSelectorActivity : ActionAbstractActivity() {
 
     }
 
-    override fun executeFields(newFields: List<Field>?) {
-        TODO("Not yet implemented")
-    }
 }

@@ -13,12 +13,11 @@ class Flow {
     lateinit var validations: List<ActionValidation>
     lateinit var actions: List<RuleAction>
 
-    fun getNext(flowState: FlowState, fieldMapper: FieldMapper): Step {
+    fun getNext(flowState: FlowState): Step {
 
         var step: Step? = null
         run loop@{
             steps.forEach {
-                it.fieldMapper = fieldMapper
                 if (it.mustExecute(flowState)) {
                     step = it
                     it.wasExecuted = true

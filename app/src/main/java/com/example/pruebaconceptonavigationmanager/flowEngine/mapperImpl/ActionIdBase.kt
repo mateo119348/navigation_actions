@@ -1,4 +1,4 @@
-package com.example.pruebaconceptonavigationmanager.flow
+package com.example.pruebaconceptonavigationmanager.flowEngine.mapperImpl
 
 import com.example.navigation.action.ActionId
 import kotlinx.android.parcel.IgnoredOnParcel
@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Suppress("PLUGIN_WARNING")
 @Parcelize
-enum class ActionIdImpl() : ActionId {
+enum class ActionIdBase() : ActionId {
     CALCULATOR("mercadopago://calculator"),
     DESCRIPTION("mercadopago://description"),
     CHOOSER("mercadopago://chooser"),
@@ -15,9 +15,9 @@ enum class ActionIdImpl() : ActionId {
 
 
     @IgnoredOnParcel
-    lateinit var deepLink: String
+    var deepLink: String? = null
 
-    constructor(deepLinkArg: String) : this() {
+    constructor(deepLinkArg: String?) : this() {
         deepLink = deepLinkArg
     }
 

@@ -11,7 +11,7 @@ import com.example.navigation.stepsEngine.flow.rules.logic.OrRule
 import com.example.navigation.stepsEngine.payment.FlowState
 import kotlin.math.absoluteValue
 
-class Step {
+class Step: Cloneable{
     lateinit var stepIdentifier: StepIdentifier
         private set
     var requiredFields: List<String>? = null
@@ -71,31 +71,36 @@ class Step {
         }
     }
 
+    /**
+     * Busco la siguiente accion despues de la que recibe por parametro, si no hay mas, devuelvo null
+     */
     fun getNextAction(currentRuleAction: RuleAction?): RuleAction? {
-        return if (currentRuleAction == null) {
-            actions.first()
-        } else {
-            var index = actions.indexOf(currentRuleAction)
-            index++
-            return if (index == actions.size) {
-                null
-            } else
-                actions[index]
-        }
+        var index = actions.indexOf(currentRuleAction)
+        index++
+        return actions.getOrNull(index)
+    }
+
+    fun getFistAction(): RuleAction {
+        return actions.first()
     }
 
     fun previousAction(currentRuleAction: RuleAction?): RuleAction? {
         var index = actions.indexOf(currentRuleAction)
-        return if (index == 0 )
-            null
-        else {
-            index--
-            actions[index]
-        }
+        index--
+        return actions.getOrNull(index)
     }
 
     fun getLastAction(): RuleAction {
         return actions.last()
+    }
+
+    public override fun clone(): Step {
+        var copy = Step()
+        copy.stepIdentifier = stepIdentifier
+        copy.requiredFields = requiredFields
+        copy.optionalFields = optionalFields
+        copy.rule = rule
+        return copy
     }
 
 

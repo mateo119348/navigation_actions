@@ -7,4 +7,5 @@ import com.example.navigation.stepsEngine.payment.FlowState
 
 interface FieldMapper : Parcelable{
     fun getField(fieldId: String): Field
+    fun getFields(fields: List<String>?): List<Field>
 }

@@ -1,27 +1,23 @@
 package com.example.navigation.action
 
 import android.util.Log
-import com.example.navigation.mappers.ActionMapper
+import com.example.navigation.mappers.FlowMediator
 import com.example.navigation.stepsEngine.field.Field
 import com.example.navigation.stepsEngine.field.FieldId
-import com.example.navigation.mappers.FieldMapper
 import com.example.navigation.stepsEngine.flow.Flow
 import com.example.navigation.stepsEngine.flow.Step
 import com.example.navigation.stepsEngine.payment.FlowState
 
 class FlowManager {
-    lateinit var paymentFlowState: FlowState private set
-    private lateinit var actionMapper: ActionMapper
-    private lateinit var fieldMapper: FieldMapper
+    lateinit var flowState: FlowState private set
+    lateinit var snapshotFlowState: FlowState private set
+    private lateinit var flowMediator: FlowMediator
+    private lateinit var snapshotFlowMediator: FlowMediator
     private lateinit var flow: Flow
     private var currentAction = RuleAction()
-
+    private var snapshotCurrentAction = RuleAction()
     private var currentStep = Step()
-        set(value) {
-            field = value
-            field.actions = getStepActions(field)
-            currentAction = field.getNextAction(null)!!
-        }
+    private var snapshotCurrentStep = Step()
 
 
     private fun validateAll(mCurrentAction: Action): Boolean {
@@ -35,23 +31,31 @@ class FlowManager {
 
     /**
      * Se intstancia el flow correspondiente al tipo de operacion, inicializa el json
-     * @param actionMapper: contiene el mappeo de las instancias que representan las actions (Activities)
+     * @param flowMediator: contiene el mappeo de las instancias que representan las actions (Activities)
      * @param flow: entidad que representa el json de los steps y actions
      * @param paymentFlowState: contiene el estado actual del pago
      */
-    fun startFlow(actionMapper: ActionMapper, flow: Flow, paymentFlowState: FlowState, fieldMapper: FieldMapper) {
-        this.fieldMapper = fieldMapper
+    fun startFlow(flowMediator: FlowMediator, flow: Flow, paymentFlowState: FlowState) {
         this.flow = flow
-        this.actionMapper = actionMapper
-        this.paymentFlowState = paymentFlowState
-        executeFirstStep()
+        this.flowMediator = flowMediator
+        this.flowState = paymentFlowState
+
+        executeNextStep()
+        //executeFirstStep()
     }
 
     /**
      * Este metodo es llamado por la action para modificar los valores de FlowState
      */
-    fun setField(field: Field, value: Any?) {
-        field.set(paymentFlowState, value)
+    fun setField(field: FieldId, value: Any?) {
+        getField(field).set(flowState, value)
+    }
+
+    /**
+     * Este metodo es llamado por la action para consultar los valores de FlowState
+     */
+    fun getField(field: FieldId): Field {
+        return flowState.getField(field.id())
     }
 
     /**
@@ -64,7 +68,7 @@ class FlowManager {
         val validations = flow.validations.filter { it -> it.field == idField.id()}
 
         validations.forEach {
-            if (!it.rule.evaluate(paymentFlowState)) {
+            if (!it.rule.evaluate(flowState)) {
                 currentAction.resolveUnfullfiledRule(it)
                 return false
             }
@@ -95,9 +99,15 @@ class FlowManager {
      */
     fun back(mCurrentAction: Action) {
         mCurrentAction.fields?.forEach {
-            it.initState(paymentFlowState)
+            it.initState(flowState)
         }
-        val previousAction = currentStep.previousAction(currentAction)
+        var previousAction = currentStep.previousAction(currentAction)
+
+        while ( previousAction != null && flowMediator.containsAction(previousAction)){
+            previousAction = currentStep.previousAction(currentAction)
+        }
+
+
         if (previousAction == null) {
             currentStep = flow.getPreviousStep(currentStep)
             currentAction = currentStep.getLastAction()
@@ -105,6 +115,13 @@ class FlowManager {
         } else {
             currentAction = previousAction
         }
+
+
+
+    }
+
+    fun addAction(action: Action) {
+        flowMediator.addAction(action)
     }
 
 
@@ -147,13 +164,13 @@ class FlowManager {
      * Si no es asi, se evalua la rule del step (se deberia cumplir ) y avanza al siguiente step
      */
     private fun executeNext(mCurrentAction: Action) {
-
+        generateSnapshot()
         val nextAction = currentStep.getNextAction(currentAction)
         if (nextAction != null) {
             currentAction = nextAction
             startAction(currentAction)
-        } else if (!currentStep.mustExecute(paymentFlowState)) {
-            executeNextStep(mCurrentAction)
+        } else if (!currentStep.mustExecute(flowState)) {
+            executeNextStep()
         } else {
             throw IllegalStateException("Revisar las rules y validations de salida, se tendrian que haber cumplido las validaciones")
         }
@@ -164,40 +181,54 @@ class FlowManager {
      * Si la primera action del nuevo step actual coincide con la ultima action del step anterior (mCurrentAction),
      * entonces sobre esa misma action (mCurrentAction), ejecuta los campos requeridos por el currentStep, sino ejecuta la currentAction
      */
-    private fun executeNextStep(mCurrentAction: Action) {
-        currentStep = flow.getNext(paymentFlowState, fieldMapper)
+    private fun executeNextStep() {
+        currentStep = flow.getNext(flowState)
+        currentStep.actions = getStepActions(currentStep)
+        currentAction = currentStep.getFistAction()
 
-        if (currentAction.id == mCurrentAction.name.id()) {
-            executeNextField(mCurrentAction)
-        } else {
+//        if (currentAction.id == mCurrentAction.name.id()) {
+//            executeNextField(mCurrentAction)
+//        } else {
             startAction(currentAction)
-        }
+        //}
     }
 
-    private fun executeFirstStep() {
-        currentStep = flow.getNext(paymentFlowState, fieldMapper)
-
-        startAction(currentAction)
-    }
+//    private fun executeFirstStep() {
+//        currentStep = flow.getNext(flowState)
+//
+//        startAction(currentAction)
+//    }
 
     private fun startAction(action: RuleAction) {
-        actionMapper.startAction(action)
+        flowMediator.startAction(action)
     }
 
-    private fun executeNextField(action: Action) {
-        //TODO: Evaluar si es necesario pasar tambien los campos opcionales llegado el caso
-        actionMapper.executeNextField(action, getFields(currentStep.requiredFields))
+//    private fun executeNextField(action: Action) {
+//        //TODO: Evaluar si es necesario pasar tambien los campos opcionales llegado el caso
+//        flowMediator.executeNextField(action, currentStep.requiredFields)
+//    }
+
+//    private fun getFields(fieldsStr: List<String>?) : List<Field>? {
+//        val fields = ArrayList<Field>()
+//        fieldsStr?.forEach {
+//            fields.add(fieldMapper.getField(it))
+//        }
+//        return fields
+//    }
+
+    fun generateSnapshot(){
+        snapshotFlowState = flowState.clone()
+        snapshotFlowMediator = flowMediator.clone()
+        snapshotCurrentAction = currentAction.clone()
+        snapshotCurrentStep = currentStep.clone()
     }
 
-    private fun getFields(fieldsStr: List<String>?) : List<Field>? {
-        val fields = ArrayList<Field>()
-        fieldsStr?.forEach {
-            fields.add(fieldMapper.getField(it))
-        }
-        return fields
+    private fun copyFromSnapshot(){
+        flowState = snapshotFlowState
+        flowMediator = snapshotFlowMediator
+        currentAction  = snapshotCurrentAction
+        currentStep = snapshotCurrentStep
     }
-
-
 
 
 
@@ -212,8 +243,5 @@ class FlowManager {
             }
             private set
 
-        fun getField(fieldId: String): Field {
-            return i?.fieldMapper?.getField(fieldId)!!
-        }
     }
 }

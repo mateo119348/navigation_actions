@@ -1,23 +1,20 @@
-package com.example.pruebaconceptonavigationmanager.flow.fields
+package com.example.pruebaconceptonavigationmanager.flowEngine.fields
 
 import com.example.navigation.stepsEngine.field.Field
 import com.example.navigation.stepsEngine.field.FieldId
 import com.example.navigation.stepsEngine.payment.FlowState
-import com.example.navigation.stepsEngine.payment.cart.Cart
 import kotlinx.android.parcel.Parcelize
+import java.math.BigDecimal
 
 @Parcelize
-class CartField(val field: FieldId) : Field(field)  {
+class AmountField (val field: FieldId) : Field(field)  {
 
     override fun get(flowState: FlowState): Any? {
-        return flowState.cart
+        return flowState.amount
     }
 
     override fun set(flowState: FlowState, value: Any?) {
-        flowState.cart = value as Cart
+        flowState.amount = value as BigDecimal?
     }
 
-    override fun initState(flowState: FlowState) {
-        flowState.cart = Cart()
-    }
 }

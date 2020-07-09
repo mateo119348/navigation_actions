@@ -2,12 +2,11 @@ package com.example.pruebaconceptonavigationmanager.activities.calculator.mla
 
 import android.widget.Toast
 import com.example.navigation.action.FlowManager
-import com.example.navigation.stepsEngine.field.*
 import com.example.navigation.stepsEngine.flow.rules.actionValidation.ActionValidation
 import com.example.pruebaconceptonavigationmanager.R
 import com.example.pruebaconceptonavigationmanager.activities.calculator.CalculatorActivity
 import com.example.pruebaconceptonavigationmanager.activities.calculator.CalculatorPresenter
-import com.example.pruebaconceptonavigationmanager.flow.FieldIdImpl
+import com.example.pruebaconceptonavigationmanager.flowEngine.mapperImpl.FieldIdImpl
 import kotlinx.android.synthetic.main.activity_calculator.*
 import kotlinx.android.synthetic.main.activity_payment_description.*
 import java.math.BigDecimal

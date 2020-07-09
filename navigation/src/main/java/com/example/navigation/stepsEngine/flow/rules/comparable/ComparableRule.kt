@@ -7,24 +7,23 @@ import com.example.navigation.stepsEngine.payment.FlowState
 
 abstract class ComparableRule : Rule() {
 
-    protected open var field: String? = null
+    protected open lateinit var field: String
     open lateinit var value: String
     var valueType: String? = null
     var isNot = false
     private var fieldValue: Field? = null
 
 
-    private fun getField(): Field? {
+    private fun getField(flowState: FlowState): Field? {
         if (fieldValue == null)
-            fieldValue = FlowManager.getField(field!!)
+            fieldValue = flowState.getField(field)
         return fieldValue;
     }
 
     fun getValue(flowState: FlowState): Any? {
-
-        val value = getField()!!.get(flowState)
+        val value = getField(flowState)!!.get(flowState)
         if (this !is NullRule)
-            checkNotNull(value) { String.format("the %s field must not be null", getField()!!.id)}
+            checkNotNull(value) { String.format("the %s field must not be null", getField(flowState)!!.id)}
         return value
     }
 

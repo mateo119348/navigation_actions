@@ -5,52 +5,61 @@ import android.os.Bundle
 import com.example.navigation.action.*
 import com.example.navigation.stepsEngine.field.Field
 import com.example.navigation.stepsEngine.field.FieldId
-import com.example.pruebaconceptonavigationmanager.flow.ActionWrapper
+import com.example.pruebaconceptonavigationmanager.flowEngine.ActionHeader
 
-abstract class ActionAbstractActivity() : AppCompatActivity(), Action {
+abstract class ActionAbstractActivity: AppCompatActivity(), Action {
 
 
-    override val fields: ArrayList<Field>?
-        get() = actionWrapper?.fields
+    override val fields: List<Field>?
+        get() = actionHeader?.fields
 
     override val name: ActionId
-        get() = actionWrapper!!.actionId
+        get() = actionHeader!!.actionId
 
 
-    private var actionWrapper: ActionWrapper? = null
+    private var actionHeader: ActionHeader? = null
         get() {
             field ?: run {
-                field = intent.getParcelableExtra(BUNDLE_ACTION_WRAPPER)
+                field = intent.getParcelableExtra(BUNDLE_ACTION_HEADER)
             }
             return field
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        actionWrapper = intent.getParcelableExtra(BUNDLE_ACTION_WRAPPER)
+        actionHeader = intent.getParcelableExtra(BUNDLE_ACTION_HEADER)
         super.onCreate(savedInstanceState)
     }
 
 
-    override fun setField(idField: FieldId, value: Any?) {
-        FlowManager.i?.setField(getField(idField), value)
+    override fun setField(fieldId: FieldId, value: Any?) {
+        val field = fields!!.firstOrNull() { it.id.id() == fieldId.id() }
+
+        field?.let {
+            FlowManager.i?.setField(fieldId, value)
+        } ?: run {
+            throw IllegalStateException("Can not set the field ${fieldId.id()} because don't exist in current action")
+        }
+
+
+
     }
 
     override fun getField(idField: FieldId): Field {
-        return fields!!.first { it.id.id() == idField.id() }
+        return FlowManager.i?.getField(idField)!!
     }
 
-    override fun executeFields(newFields: List<Field>?) {
-
-    }
-
-    override fun backStepState() {
-        FlowManager.i?.back(this)
-    }
 
     override fun onBackPressed() {
-        backStepState()
+        FlowManager.i?.back(this)
         super.onBackPressed()
     }
+
+    open fun addAction(action: Action){
+        FlowManager.i?.addAction(action)
+    }
+
+    override fun execute() {}
+
 
 
 }

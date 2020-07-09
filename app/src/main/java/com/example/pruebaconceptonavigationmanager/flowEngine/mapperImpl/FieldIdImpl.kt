@@ -1,4 +1,4 @@
-package com.example.pruebaconceptonavigationmanager.flow
+package com.example.pruebaconceptonavigationmanager.flowEngine.mapperImpl
 
 import com.example.navigation.stepsEngine.field.FieldId
 import kotlinx.android.parcel.Parcelize
