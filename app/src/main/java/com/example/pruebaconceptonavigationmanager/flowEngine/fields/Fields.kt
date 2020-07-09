@@ -1,6 +1,6 @@
 package com.example.pruebaconceptonavigationmanager.flowEngine.fields
 
-import com.example.navigation.steps.field.FieldId
+import com.example.navigation.flowEngine.steps.field.FieldId
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

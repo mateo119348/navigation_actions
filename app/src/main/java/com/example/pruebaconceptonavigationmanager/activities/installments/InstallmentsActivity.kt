@@ -1,7 +1,7 @@
 package com.example.pruebaconceptonavigationmanager.activities.installments
 
 import android.os.Bundle
-import com.example.navigation.steps.flow.rules.actionValidation.ActionValidation
+import com.example.navigation.flowEngine.validations.ActionValidation
 import com.example.pruebaconceptonavigationmanager.R
 import com.example.pruebaconceptonavigationmanager.activities.ActionAbstractActivity
 

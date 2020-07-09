@@ -2,10 +2,10 @@ package com.example.pruebaconceptonavigationmanager.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.navigation.action.*
+import com.example.navigation.flowEngine.actions.*
 import com.example.navigation.flowEngine.FlowManager
-import com.example.navigation.steps.field.Field
-import com.example.navigation.steps.field.FieldId
+import com.example.navigation.flowEngine.steps.field.Field
+import com.example.navigation.flowEngine.steps.field.FieldId
 import com.example.pruebaconceptonavigationmanager.flowEngine.actions.ActionWrapper
 import com.example.pruebaconceptonavigationmanager.flowEngine.FlowMediatorImpl.Companion.BUNDLE_ACTION_WRAPPER
 

@@ -1,7 +1,7 @@
 package com.example.navigation.flowEngine
 
-import com.example.navigation.action.Action
-import com.example.navigation.action.RuleAction
+import com.example.navigation.flowEngine.actions.Action
+import com.example.navigation.flowEngine.actions.RuleAction
 
 interface FlowMediator : Cloneable{
     fun executeAction(action: RuleAction)

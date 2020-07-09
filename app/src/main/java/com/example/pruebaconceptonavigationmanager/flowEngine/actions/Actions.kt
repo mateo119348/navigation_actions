@@ -1,6 +1,6 @@
 package com.example.pruebaconceptonavigationmanager.flowEngine.actions
 
-import com.example.navigation.action.ActionId
+import com.example.navigation.flowEngine.actions.ActionId
 import kotlinx.android.parcel.Parcelize
 
 

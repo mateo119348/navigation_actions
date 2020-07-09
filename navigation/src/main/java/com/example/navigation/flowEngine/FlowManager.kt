@@ -1,13 +1,12 @@
 package com.example.navigation.flowEngine
 
 import android.util.Log
-import com.example.navigation.action.Action
-import com.example.navigation.action.RuleAction
-import com.example.navigation.steps.field.Field
-import com.example.navigation.steps.field.FieldId
-import com.example.navigation.steps.flow.Flow
-import com.example.navigation.steps.flow.Step
-import com.example.navigation.steps.payment.FlowState
+import com.example.navigation.flowEngine.actions.Action
+import com.example.navigation.flowEngine.actions.RuleAction
+import com.example.navigation.flowEngine.steps.field.Field
+import com.example.navigation.flowEngine.steps.field.FieldId
+import com.example.navigation.flowEngine.steps.Step
+import com.example.navigation.flowEngine.steps.flowState.FlowState
 
 class FlowManager {
     lateinit var flowState: FlowState private set

@@ -2,7 +2,7 @@ package com.example.pruebaconceptonavigationmanager.activities.calculator.mla
 
 import android.widget.Toast
 import com.example.navigation.flowEngine.FlowManager
-import com.example.navigation.steps.flow.rules.actionValidation.ActionValidation
+import com.example.navigation.flowEngine.validations.ActionValidation
 import com.example.pruebaconceptonavigationmanager.R
 import com.example.pruebaconceptonavigationmanager.activities.calculator.CalculatorActivity
 import com.example.pruebaconceptonavigationmanager.activities.calculator.CalculatorPresenter

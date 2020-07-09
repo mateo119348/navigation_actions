@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.navigation.flowEngine.FlowManager.Companion.i
-import com.example.navigation.steps.flow.Flow
-import com.example.navigation.steps.payment.FlowState
+import com.example.navigation.flowEngine.Flow
+import com.example.navigation.flowEngine.steps.flowState.FlowState
 import com.example.pruebaconceptonavigationmanager.R
 import com.example.pruebaconceptonavigationmanager.flowEngine.FlowMediatorImpl
 import com.example.pruebaconceptonavigationmanager.flowEngine.actions.mappers.ActionsMapperBase

@@ -1,9 +1,9 @@
 package com.example.pruebaconceptonavigationmanager.flowEngine.actions
 
 import android.os.Parcelable
-import com.example.navigation.action.Action
-import com.example.navigation.action.ActionId
-import com.example.navigation.steps.field.Field
+import com.example.navigation.flowEngine.actions.Action
+import com.example.navigation.flowEngine.actions.ActionId
+import com.example.navigation.flowEngine.steps.field.Field
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

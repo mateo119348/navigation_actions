@@ -1,9 +1,9 @@
 package com.example.pruebaconceptonavigationmanager.flowEngine.fields
 
-import com.example.navigation.steps.field.Field
-import com.example.navigation.steps.field.FieldId
-import com.example.navigation.steps.payment.FlowState
-import com.example.navigation.steps.payment.device.Device
+import com.example.navigation.flowEngine.steps.field.Field
+import com.example.navigation.flowEngine.steps.field.FieldId
+import com.example.navigation.flowEngine.steps.flowState.FlowState
+import com.example.navigation.flowEngine.steps.flowState.device.Device
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
