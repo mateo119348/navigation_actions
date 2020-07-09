@@ -27,15 +27,6 @@ class FlowMediatorImpl(private var context: Context, private val fieldMapper: Fi
         initAction(actionHeaderMapperBase.getActionHeader(action, fieldMapper))
     }
 
-//    /**
-//     * Sobre una Action ya activa, ejecuta en base a nuevos fields requeridos por otro step
-//     * @param action  Action activa (pantalla)
-//     * @param params
-//     */
-//    override fun executeNextField(action: Action, fields: List<String>?) {
-//        action.executeFields(fieldMapper.getFields(fields))
-//    }
-
     override fun addAction(action: Action) {
         actions.add(action)
     }
@@ -48,7 +39,6 @@ class FlowMediatorImpl(private var context: Context, private val fieldMapper: Fi
         if (actionHeader.deepLink != null) {
             actions.clear()
             val intent = Intent(Intent.ACTION_VIEW).setPackage(context.packageName).putExtra(INTERNAL, true)
-            //FlowManager.i?.generateSnapshot()
             intent.data = Uri.parse(actionHeader.deepLink)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra(BUNDLE_ACTION_HEADER, actionHeader)

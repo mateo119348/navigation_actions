@@ -39,9 +39,6 @@ abstract class ActionAbstractActivity: AppCompatActivity(), Action {
         } ?: run {
             throw IllegalStateException("Can not set the field ${fieldId.id()} because don't exist in current action")
         }
-
-
-
     }
 
     override fun getField(idField: FieldId): Field {

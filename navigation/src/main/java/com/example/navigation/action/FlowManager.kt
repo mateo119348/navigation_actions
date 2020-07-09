@@ -10,14 +10,10 @@ import com.example.navigation.stepsEngine.payment.FlowState
 
 class FlowManager {
     lateinit var flowState: FlowState private set
-    lateinit var snapshotFlowState: FlowState private set
     private lateinit var flowMediator: FlowMediator
-    private lateinit var snapshotFlowMediator: FlowMediator
     private lateinit var flow: Flow
     private var currentAction = RuleAction()
-    private var snapshotCurrentAction = RuleAction()
     private var currentStep = Step()
-    private var snapshotCurrentStep = Step()
 
 
     private fun validateAll(mCurrentAction: Action): Boolean {
@@ -41,7 +37,6 @@ class FlowManager {
         this.flowState = paymentFlowState
 
         executeNextStep()
-        //executeFirstStep()
     }
 
     /**
@@ -69,7 +64,7 @@ class FlowManager {
 
         validations.forEach {
             if (!it.rule.evaluate(flowState)) {
-                currentAction.resolveUnfullfiledRule(it)
+                currentAction.resolveUnfulfilledRule(it)
                 return false
             }
         }
@@ -84,7 +79,7 @@ class FlowManager {
     fun next(mCurrentAction: Action) {
         try {
             if (validateAll(mCurrentAction)) {
-                executeNext(mCurrentAction)
+                executeNext()
             }
         } catch (ex: Exception) {
             Log.e("Error", ex.message, ex.cause)
@@ -115,8 +110,6 @@ class FlowManager {
         } else {
             currentAction = previousAction
         }
-
-
 
     }
 
@@ -163,8 +156,7 @@ class FlowManager {
      * Chequea si existe una proxima Action dentro de las acciones del Step actual
      * Si no es asi, se evalua la rule del step (se deberia cumplir ) y avanza al siguiente step
      */
-    private fun executeNext(mCurrentAction: Action) {
-        generateSnapshot()
+    private fun executeNext() {
         val nextAction = currentStep.getNextAction(currentAction)
         if (nextAction != null) {
             currentAction = nextAction
@@ -186,48 +178,11 @@ class FlowManager {
         currentStep.actions = getStepActions(currentStep)
         currentAction = currentStep.getFistAction()
 
-//        if (currentAction.id == mCurrentAction.name.id()) {
-//            executeNextField(mCurrentAction)
-//        } else {
-            startAction(currentAction)
-        //}
+        startAction(currentAction)
     }
-
-//    private fun executeFirstStep() {
-//        currentStep = flow.getNext(flowState)
-//
-//        startAction(currentAction)
-//    }
 
     private fun startAction(action: RuleAction) {
         flowMediator.startAction(action)
-    }
-
-//    private fun executeNextField(action: Action) {
-//        //TODO: Evaluar si es necesario pasar tambien los campos opcionales llegado el caso
-//        flowMediator.executeNextField(action, currentStep.requiredFields)
-//    }
-
-//    private fun getFields(fieldsStr: List<String>?) : List<Field>? {
-//        val fields = ArrayList<Field>()
-//        fieldsStr?.forEach {
-//            fields.add(fieldMapper.getField(it))
-//        }
-//        return fields
-//    }
-
-    fun generateSnapshot(){
-        snapshotFlowState = flowState.clone()
-        snapshotFlowMediator = flowMediator.clone()
-        snapshotCurrentAction = currentAction.clone()
-        snapshotCurrentStep = currentStep.clone()
-    }
-
-    private fun copyFromSnapshot(){
-        flowState = snapshotFlowState
-        flowMediator = snapshotFlowMediator
-        currentAction  = snapshotCurrentAction
-        currentStep = snapshotCurrentStep
     }
 
 

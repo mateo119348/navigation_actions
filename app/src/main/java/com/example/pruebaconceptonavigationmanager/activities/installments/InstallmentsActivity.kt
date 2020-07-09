@@ -15,7 +15,7 @@ class InstallmentsActivity : ActionAbstractActivity() {
     }
 
 
-    override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
+    override fun resolveUnfulfilledRule(unfulfilledRule: ActionValidation) {
         TODO("Not yet implemented")
     }
 

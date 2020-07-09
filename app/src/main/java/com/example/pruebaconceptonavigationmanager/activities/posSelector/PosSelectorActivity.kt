@@ -14,7 +14,7 @@ class PosSelectorActivity : ActionAbstractActivity() {
     }
 
 
-    override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
+    override fun resolveUnfulfilledRule(unfulfilledRule: ActionValidation) {
 
     }
 

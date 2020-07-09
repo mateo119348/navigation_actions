@@ -35,7 +35,7 @@ open class CalculatorActivity : ActionAbstractActivity() {
 
 
 
-    override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
+    override fun resolveUnfulfilledRule(unfulfilledRule: ActionValidation) {
         when (unfulfilledRule.id) {
 
             ActionValidation.Codes.AMOUNT_OUT_OF_RANGE -> {

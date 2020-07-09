@@ -53,7 +53,7 @@ class ChooserActivity : ActionAbstractActivity() {
 
 
 
-    override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
+    override fun resolveUnfulfilledRule(unfulfilledRule: ActionValidation) {
         when (unfulfilledRule.id) {
             ActionValidation.Codes.CARD_TYPE_IS_NULL -> {
                 Toast.makeText(applicationContext, "No se ha seleccionado tipo de tarjeta", Toast.LENGTH_LONG).show()

@@ -28,8 +28,8 @@ class CalculatorActivityMLA : CalculatorActivity() {
         FlowManager.i!!.next(this)
     }
 
-    override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
-        super.resolveUnfullfiledRule(unfulfilledRule)
+    override fun resolveUnfulfilledRule(unfulfilledRule: ActionValidation) {
+        super.resolveUnfulfilledRule(unfulfilledRule)
 
         when (unfulfilledRule.id) {
             ActionValidation.Codes.DESCRIPTION_TOO_LARGE -> {

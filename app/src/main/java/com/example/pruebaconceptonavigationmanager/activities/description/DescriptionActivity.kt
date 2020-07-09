@@ -26,7 +26,7 @@ class DescriptionActivity : ActionAbstractActivity() {
     }
 
 
-    override fun resolveUnfullfiledRule(unfulfilledRule: ActionValidation) {
+    override fun resolveUnfulfilledRule(unfulfilledRule: ActionValidation) {
         when (unfulfilledRule.id) {
             ActionValidation.Codes.DESCRIPTION_TOO_LARGE -> {
                 Toast.makeText(applicationContext, "Descripcion demasiado larga", Toast.LENGTH_LONG).show()
