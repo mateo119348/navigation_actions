@@ -17,16 +17,6 @@ class FlowManager {
     private var currentAction = RuleAction()
     private var currentStep = Step()
 
-
-    private fun validateAll(mCurrentAction: Action): Boolean {
-        mCurrentAction.fields?.forEach {
-            if (!validate(mCurrentAction, it.id))
-                return false
-        }
-
-        return true
-    }
-
     /**
      * Se intstancia el flow correspondiente al tipo de operacion, inicializa el json
      * @param flowMediator: contiene el mappeo de las instancias que representan las actions (Activities)
@@ -42,21 +32,21 @@ class FlowManager {
     }
 
     /**
-     * Este metodo es llamado por la action para modificar los valores de FlowState
+     * Modifica el valor de un determinado field del FlowState
      */
     fun setField(field: FieldId, value: Any?) {
         getField(field).set(flowState, value)
     }
 
     /**
-     * Este metodo es llamado por la action para consultar los valores de FlowState
+     * Retorna el valor de un determinado field del FlowState
      */
     fun getField(field: FieldId): Field {
         return flowState.getField(field.id())
     }
 
     /**
-     * Validacion de un field especifico: se busca sobre las validaciones de salida las que coincidan
+     * Validacion de un field especifico: se busca sobre las validations que coincidan
      * con el campo requerido
      * @param currentAction accion actual, que en caso de no cumplir con la/s regla/s sabe como resolverla
      * @param idField campo a validar
@@ -90,24 +80,30 @@ class FlowManager {
     }
 
     /**
-     * 1-deshago los cambios sobre los campos que haya afectado el action actual (la pantalla actual
-     * 2-Busco si existe una accion previa a la actual
-     * 3-Si existe, vuelvo a esa accion, sino, busco el step anterior al actual y su ultima accion
+     * 1-Deshago los cambios sobre los campos que haya afectado el action actual (resetFields)
+     * 2-Busco action previa a la actual, y si es una function action, continuo buscando
+     * la previa hasta encontrar una Screen action. Mientras busco, reinicio los campos
+     * de esas function actions
+     * 3-Cuando no se encontro una function action (termina el while), y previousRuleAction es null,
+     * entonces no tengo mas actions para este step y vuelvo al step anterior, en su ultima action
+     * si previousRuleAction no es null, es decir que hay una screen action encontrada,
+     * la establezco como la actual
      */
     fun goBack(currentScreenAction: ScreenAction) {
-
+        //1-
         resetFields(currentScreenAction)
 
+        //2-
         var previousRuleAction = currentStep.previousAction(currentAction)
-        var previousAction = flowMediator.getAction(previousRuleAction)
+        var previousFunctionAction = flowMediator.getAction(previousRuleAction)
 
-        while (previousRuleAction != null && previousAction != null) {
-            resetFields(previousAction)
+        while (previousFunctionAction != null) {
+            resetFields(previousFunctionAction)
             previousRuleAction = currentStep.previousAction(previousRuleAction)
-            previousAction = flowMediator.getAction(previousRuleAction)
+            previousFunctionAction = flowMediator.getAction(previousRuleAction)
         }
 
-
+        //3-
         if (previousRuleAction == null) {
             currentStep = flow.getPreviousStep(currentStep)
             currentAction = currentStep.getLastAction()
@@ -118,16 +114,27 @@ class FlowManager {
 
     }
 
+    /**
+     * Agrego una Function Action al stack para ser ejecutada en el step actual
+     */
+    fun addAction(action: FunctionAction) {
+        flowMediator.addAction(action)
+    }
+
+    private fun validateAll(mCurrentAction: Action): Boolean {
+        mCurrentAction.fields?.forEach {
+            if (!validate(mCurrentAction, it.id))
+                return false
+        }
+
+        return true
+    }
+
     private fun resetFields(action: Action) {
         action.fields?.forEach {
             it.initState(flowState)
         }
     }
-
-    fun addAction(action: FunctionAction) {
-        flowMediator.addAction(action)
-    }
-
 
     /**
      * Para el step actual busco cual/es es/son la/s action/s que satisface los campos requeridos
@@ -158,8 +165,10 @@ class FlowManager {
 
         //TODO: si no tiene ninguna accion asociada con ningun campo requerido, buscar una accion asociada
         // al identificador del step
-        require(candidates.isNotEmpty()) { String.format("the %s step has no any action associated. " +
-            "Check steps and actions", currentStep.stepIdentifier.name) }
+        require(candidates.isNotEmpty()) {
+            String.format("the %s step has no any action associated. " +
+                "Check steps and actions", currentStep.stepIdentifier.name)
+        }
 
 
         return candidates
@@ -183,10 +192,7 @@ class FlowManager {
     }
 
     /**
-     * Busca el siguiente step a ejecutar
-     * Si la primera action del nuevo step actual coincide con la ultima action del step anterior (mCurrentAction),
-     * entonces sobre esa misma action (mCurrentAction), ejecuta los campos requeridos por el currentStep,
-     * sino ejecuta la currentAction
+     * Busca el siguiente step, establece sus actions y establece la primera
      */
     private fun executeNextStep() {
         currentStep = flow.getNext(flowState)

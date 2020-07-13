@@ -34,11 +34,9 @@ abstract class ActionAbstractActivity: AppCompatActivity(), ScreenAction {
 
 
     override fun setField(fieldId: FieldId, value: Any?) {
-        val field = fields!!.firstOrNull() { it.id.id() == fieldId.id() }
-
-        field?.let {
+        if (fields?.any {it.id.id() == fieldId.id()}!!){
             FlowManager.i?.setField(fieldId, value)
-        } ?: run {
+        } else {
             throw IllegalStateException("Can not set the field ${fieldId.id()} because don't exist in current action")
         }
     }
